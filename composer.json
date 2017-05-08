@@ -1,0 +1,16 @@
+{
+  "name": "codemonkey1988/image-compression",
+  "type": "typo3-cms-extension",
+  "description": "TYPO3 Extension to compress image.",
+  "homepage": "https://github.com/codemonkey1988/image-compression/",
+  "license": ["GPL-2.0+"],
+  "keywords": ["TYPO3 CMS", "image_compression"],
+  "autoload": {
+    "psr-4": {
+      "Codemonkey1988\\ImageCompression\\": "Classes/"
+    }
+  },
+  "require": {
+    "tinify/tinify": "^1.5"
+  }
+}

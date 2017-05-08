@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff version="1.0">
+	<file source-language="en" product-name="image_compression">
+		<header/>
+		<body>
+			<trans-unit id="tinify">
+				<source>Tinify</source>
+			</trans-unit>
+			<trans-unit id="config">
+				<source>Configuration</source>
+			</trans-unit>
+
+			<trans-unit id="enableCompressOnUpload">
+				<source>Enable compression on upload:Enable automatically image compression on upload.</source>
+			</trans-unit>
+
+			<trans-unit id="tinifyApiKey">
+				<source>API key:Please insert your Tinyfy API key</source>
+			</trans-unit>
+			<trans-unit id="tinifyCompressionCount">
+				<source>Compression count:Please enter the maximum images, that should be converted per month. The value 0 disables this feature.</source>
+			</trans-unit>
+			<trans-unit id="tinifyExtensions">
+				<source>Supported extensions:Comma-seperated list of supported file extensions for this compressor.</source>
+			</trans-unit>
+
+			<trans-unit id="task.compress">
+				<source>Image compression task</source>
+			</trans-unit>
+			<trans-unit id="task.compress.description">
+				<source>Compresses all uncompressed images in this TYPO3 system.</source>
+			</trans-unit>
+		</body>
+	</file>
+</xliff>
