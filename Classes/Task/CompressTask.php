@@ -20,6 +20,7 @@ namespace Codemonkey1988\ImageCompression\Task;
  ***************************************************************/
 
 use Codemonkey1988\ImageCompression\Resource\FileRepository;
+use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use Codemonkey1988\ImageCompression\Service\CompressionService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -52,7 +53,7 @@ class CompressTask extends AbstractTask
     {
         parent::__construct();
 
-        /** @var ObjectManager $objectManager */
+        /** @vatschreinerr ObjectManager $objectManager */
         $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
         $this->compressionService = $objectManager->get(CompressionService::class);
     }
@@ -67,6 +68,7 @@ class CompressTask extends AbstractTask
         $this->filesPerRun = (int)$this->files_per_run;
 
         $this->processOriginalFiles();
+        $this->processProcessedFiles();
     }
 
     /**
@@ -78,12 +80,40 @@ class CompressTask extends AbstractTask
             return;
         }
 
+        /** @var FileRepository $fileRepository */
         $fileRepository = GeneralUtility::makeInstance(FileRepository::class);
         $files = $fileRepository->findByImageCompressionStatus(FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, (int)$this->filesPerRun);
 
-        /** @var File $file */
-        foreach ($files as $file) {
-            $this->compressionService->compress($file);
+        if ($files) {
+            /** @var File $file */
+            foreach ($files as $file) {
+                $this->compressionService->compress($file);
+
+                $this->filesPerRun--;
+            }
+        }
+    }
+
+    /**
+     * @return void
+     */
+    protected function processProcessedFiles()
+    {
+        if ($this->filesPerRun <= 0) {
+            return;
+        }
+
+        /** @var ProcessedFileRepository $processedFileRepository */
+        $processedFileRepository = GeneralUtility::makeInstance(ProcessedFileRepository::class);
+        $files = $processedFileRepository->findByImageCompressionStatus(FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, (int)$this->filesPerRun);
+
+        if ($files) {
+            /** @var File $file */
+            foreach ($files as $file) {
+                $this->compressionService->compress($file);
+
+                $this->filesPerRun--;
+            }
         }
     }
 }

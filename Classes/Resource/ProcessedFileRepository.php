@@ -19,45 +19,41 @@ namespace Codemonkey1988\ImageCompression\Resource;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use TYPO3\CMS\Core\Resource\FileRepository as BaseFileRepository;
+use TYPO3\CMS\Core\Resource\ProcessedFileRepository as BaseProcessedFileRepository;
 
 /**
- * Class FileRepository
+ * Class ProcessedFileRepository
  *
  * @package Codemonkey1988\ImageCompression\Resource
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
-class FileRepository extends BaseFileRepository
+class ProcessedFileRepository extends BaseProcessedFileRepository
 {
-    const IMAGE_COMPRESSION_NOT_PROCESSED = 0;
-    const IMAGE_COMPRESSION_PROCESSED     = 1;
-    const IMAGE_COMPRESSION_SKIPPED       = 2;
-
     /**
      * @param int $status
      * @param int $limit
      * @return array
      * @throws \InvalidArgumentException
      */
-    public function findByImageCompressionStatus($status = self::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
+    public function findByImageCompressionStatus($status = FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
     {
-        if ($status !== self::IMAGE_COMPRESSION_NOT_PROCESSED && $status !== self::IMAGE_COMPRESSION_PROCESSED && $status !== self::IMAGE_COMPRESSION_SKIPPED) {
+        if ($status !== FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED && $status !== FileRepository::IMAGE_COMPRESSION_PROCESSED && $status !== FileRepository::IMAGE_COMPRESSION_SKIPPED) {
             throw new \InvalidArgumentException('Invalid status given.', 1494225066);
         }
 
         $fileObjecs = [];
-        $res        = $this->getDatabaseConnection()->exec_SELECTquery(
-            'sys_file.*, sys_file_metadata.*',
-            'sys_file, sys_file_metadata',
-            'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_status=' . $status . $this->getWhereClauseForEnabledFields(
-            ),
+
+        $res = $this->databaseConnection->exec_SELECTQuery(
+            '*',
+            $this->table,
+            'image_compression_status = ' . $status . ' AND task_type="Image.CropScaleMask"',
             '',
-            'sys_file.tstamp ASC',
+            'tstamp ASC',
             ((int)$limit > 0) ? (int)$limit : ''
         );
 
-        if ($this->getDatabaseConnection()->sql_num_rows($res)) {
-            while ($row = $this->getDatabaseConnection()->sql_fetch_assoc($res)) {
+        if ($this->databaseConnection->sql_num_rows($res)) {
+            while ($row = $this->databaseConnection->sql_fetch_assoc($res)) {
                 $fileObjecs[] = $this->createDomainObject($row);
             }
         }

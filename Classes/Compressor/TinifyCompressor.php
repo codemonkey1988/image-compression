@@ -40,11 +40,19 @@ class TinifyCompressor implements CompressorInterface
      * @var array
      */
     protected $configuration;
-
     /**
      * @var \Codemonkey1988\ImageCompression\Service\CompressionLogService
      */
     protected $compressionLogService;
+
+    /**
+     * @param \Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService
+     * @return void
+     */
+    public function injectCompressionLogService(\Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService)
+    {
+        $this->compressionLogService = $compressionLogService;
+    }
 
     /**
      * @param ConfigurationUtility $configurationUtility
@@ -54,15 +62,6 @@ class TinifyCompressor implements CompressorInterface
     {
         $this->configurationUtility = $configurationUtility;
         $this->configuration        = $this->configurationUtility->getCurrentConfiguration('image_compression');
-    }
-
-    /**
-     * @param \Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService
-     * @return void
-     */
-    public function injectCompressionLogService(\Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService)
-    {
-        $this->compressionLogService = $compressionLogService;
     }
 
     /**
@@ -88,16 +87,12 @@ class TinifyCompressor implements CompressorInterface
      */
     public function canCompress(FileInterface $file)
     {
-        $from = new \DateTime('first day of this month 00:00:01');
-        $to = new \DateTime('last day of this month 23:59:59');
+        $from             = new \DateTime('first day of this month 00:00:01');
+        $to               = new \DateTime('last day of this month 23:59:59');
         $compressionCount = $this->compressionLogService->count($from, $to);
+        $limitReached     = $this->getCompressionCount() > 0 && $compressionCount < $this->getCompressionCount();
 
-        return $this->getApiKey()
-            && (in_array(
-                $file->getExtension(),
-                $this->getSupportedExtensions()
-            ))
-            && ($compressionCount < $this->getCompressionCount());
+        return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitReached;
     }
 
     /**

@@ -28,6 +28,19 @@
 			<trans-unit id="sys_file.image_compression_status.2">
 				<source>Skipped</source>
 			</trans-unit>
+
+			<trans-unit id="sys_file_processedfile.image_compression_status">
+				<source>Compression status</source>
+			</trans-unit>
+			<trans-unit id="sys_file_processedfile.image_compression_status.0">
+				<source>Not processed</source>
+			</trans-unit>
+			<trans-unit id="sys_file_processedfile.image_compression_status.1">
+				<source>Processed</source>
+			</trans-unit>
+			<trans-unit id="sys_file_processedfile.image_compression_status.2">
+				<source>Skipped</source>
+			</trans-unit>
 		</body>
 	</file>
 </xliff>
