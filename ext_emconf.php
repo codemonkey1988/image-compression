@@ -4,7 +4,7 @@ $EM_CONF[$_EXTKEY] = array(
     'title'            => 'Image Compression',
     'description'      => 'TYPO3 Extension to compress image',
     'category'         => 'fe',
-    'contraints'       => array(
+    'constraints'       => array(
         'depends'   => array(
             'typo3' => '7.6.0-7.6.99',
         ),
