@@ -5,6 +5,13 @@
   "homepage": "https://github.com/codemonkey1988/image-compression/",
   "license": ["GPL-2.0+"],
   "keywords": ["TYPO3 CMS", "image_compression"],
+  "authors": [
+    {
+      "name": "Tim Schreiner",
+      "email": "schreiner.tim@gmail.com",
+      "role": "Developer"
+    }
+  ],
   "autoload": {
     "psr-4": {
       "Codemonkey1988\\ImageCompression\\": "Classes/"
@@ -12,5 +19,8 @@
   },
   "require": {
     "tinify/tinify": "^1.5"
+  },
+  "replace": {
+    "image_compression": "self.version"
   }
 }
