@@ -19,7 +19,11 @@ namespace Codemonkey1988\ImageCompression\Resource;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Database\Query\Restriction\DefaultRestrictionContainer;
 use TYPO3\CMS\Core\Resource\FileRepository as BaseFileRepository;
+use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FileRepository
@@ -46,22 +50,81 @@ class FileRepository extends BaseFileRepository
         }
 
         $fileObjecs = [];
-        $res        = $this->getDatabaseConnection()->exec_SELECTquery(
+
+        if (GeneralUtility::compat_version('8.6.0')) {
+            $rows = $this->getRecords($status, $limit);
+        } else {
+            $rows = $this->getRecordsCompat($status, $limit);
+        }
+
+        foreach ($rows as $row) {
+            $fileObjecs[] = $this->createDomainObject($row);
+        }
+
+        return $fileObjecs;
+    }
+
+    /**
+     * Find records for TYPO3 v8 and higher using docrtine.
+     *
+     * @param int $status
+     * @param int $limit
+     *
+     * @return array
+     */
+    protected function getRecords($status, $limit)
+    {
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('sys_file');
+
+        $queryBuilder->setRestrictions(GeneralUtility::makeInstance(DefaultRestrictionContainer::class));
+
+        $qb = $queryBuilder
+            ->select('sys_file.*', 'sys_file_metadata.*')
+            ->from('sys_file')
+            ->join(
+                'sys_file',
+                'sys_file_metadata',
+                'metadata',
+                $queryBuilder->expr()->eq('metadata.file', $queryBuilder->quoteIdentifier('sys_file.uid'))
+            )
+            ->where(
+                $queryBuilder->expr()->eq(
+                    'sys_file_metadata.image_compression_status',
+                    $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
+                )
+            )
+            ->orderBy('sys_file.tstamp', 'ASC');
+
+            if ($limit > 0) {
+                $qb->setMaxResults($limit);
+            }
+
+            $res = $qb->execute();
+
+            return $res->fetchAll();
+    }
+
+    /**
+     * Find records for TYPO3 v7
+     *
+     * @param int $status
+     * @param int $limit
+     *
+     * @return array
+     */
+    protected function getRecordsCompat($status, $limit)
+    {
+        $enabledFieldsWhereClause= BackendUtility::BEenableFields('sys_file');
+        $enabledFieldsWhereClause .= BackendUtility::deleteClause('sys_file');
+
+        return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             'sys_file.*, sys_file_metadata.*',
             'sys_file, sys_file_metadata',
-            'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_status=' . $status . $this->getWhereClauseForEnabledFields(
-            ),
+            'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_status=' . $status . $enabledFieldsWhereClause,
             '',
             'sys_file.tstamp ASC',
             ((int)$limit > 0) ? (int)$limit : ''
         );
-
-        if ($this->getDatabaseConnection()->sql_num_rows($res)) {
-            while ($row = $this->getDatabaseConnection()->sql_fetch_assoc($res)) {
-                $fileObjecs[] = $this->createDomainObject($row);
-            }
-        }
-
-        return $fileObjecs;
     }
 }
