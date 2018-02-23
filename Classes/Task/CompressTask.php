@@ -69,6 +69,8 @@ class CompressTask extends AbstractTask
 
         $this->processOriginalFiles();
         $this->processProcessedFiles();
+
+        return true;
     }
 
     /**
@@ -76,7 +78,7 @@ class CompressTask extends AbstractTask
      */
     protected function processOriginalFiles()
     {
-        if ($this->filesPerRun <= 0) {
+        if ($this->filesPerRun <= 0 || empty($this->compress_original)) {
             return;
         }
 
@@ -99,7 +101,7 @@ class CompressTask extends AbstractTask
      */
     protected function processProcessedFiles()
     {
-        if ($this->filesPerRun <= 0) {
+        if ($this->filesPerRun <= 0 || empty($this->compress_processed)) {
             return;
         }
 
