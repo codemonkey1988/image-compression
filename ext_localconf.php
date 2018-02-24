@@ -19,13 +19,13 @@
  ***************************************************************/
 
 if (!defined('TYPO3_MODE')) {
-    die ('Access denied.');
+    die('Access denied.');
 }
 
 $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression'] = [
     'compressors' => [
-        \Codemonkey1988\ImageCompression\Compressor\TinifyCompressor::class
-    ]
+        \Codemonkey1988\ImageCompression\Compressor\TinifyCompressor::class,
+    ],
 ];
 
 // Add scheduler task for compressing images.
@@ -33,7 +33,7 @@ $GLOBALS['TYPO3_CONF_VARS']['SC_OPTIONS']['scheduler']['tasks'][\Codemonkey1988\
     'extension' => 'codemonkey1988.image_compressor',
     'title' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress',
     'description' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.description',
-    'additionalFields' => \Codemonkey1988\ImageCompression\Task\CompressTaskFieldProvider::class
+    'additionalFields' => \Codemonkey1988\ImageCompression\Task\CompressTaskFieldProvider::class,
 ];
 
 /** @var \TYPO3\CMS\Extbase\SignalSlot\Dispatcher $signalSlotDispatcher */
