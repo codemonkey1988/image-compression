@@ -19,13 +19,9 @@ namespace Codemonkey1988\ImageCompression\Service;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
-use Codemonkey1988\ImageCompression\Compressor\CompressorFactory;
-use TYPO3\CMS\Core\Resource\File;
-
 /**
  * Class CompressionLogService
  *
- * @package Codemonkey1988\ImageCompression\Service
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class CompressionLogService
@@ -43,11 +39,11 @@ class CompressionLogService
         $this->getDatabaseConnection()->exec_INSERTquery(
             'tx_imagecompression_domain_model_log',
             [
-                'pid'        => 0,
-                'crdate'     => time(),
-                'ref'        => (int)$refUid,
-                'tablename'  => $refTablename,
-                'compressor' => $compressor
+                'pid' => 0,
+                'crdate' => time(),
+                'ref' => (int)$refUid,
+                'tablename' => $refTablename,
+                'compressor' => $compressor,
             ]
         );
     }

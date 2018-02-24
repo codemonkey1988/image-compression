@@ -31,7 +31,6 @@ use TYPO3\CMS\Scheduler\Task\AbstractTask;
  * Class CompressTask
  * Compresses all not compressed images in the system.
  *
- * @package Codemonkey1988\ImageCompression\Task
  * @author Tim Schreiner <schreiner.tim@gmail.com>
  */
 class CompressTask extends AbstractTask
@@ -61,7 +60,7 @@ class CompressTask extends AbstractTask
     /**
      * Executes the task.
      *
-     * @return boolean
+     * @return bool
      */
     public function execute()
     {

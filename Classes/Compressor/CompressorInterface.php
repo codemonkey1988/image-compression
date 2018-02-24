@@ -25,7 +25,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 /**
  * Interface CompressorInterface
  *
- * @package Codemonkey1988\ImageCompression\Compressor
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 interface CompressorInterface extends SingletonInterface

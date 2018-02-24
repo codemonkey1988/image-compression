@@ -19,29 +19,28 @@ namespace Codemonkey1988\ImageCompression\Resource;
  *  This copyright notice MUST APPEAR in all copies of the script!
  ***************************************************************/
 
+use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DefaultRestrictionContainer;
 use TYPO3\CMS\Core\Resource\FileRepository as BaseFileRepository;
-use TYPO3\CMS\Backend\Utility\BackendUtility;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
  * Class FileRepository
  *
- * @package Codemonkey1988\ImageCompression\Resource
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class FileRepository extends BaseFileRepository
 {
     const IMAGE_COMPRESSION_NOT_PROCESSED = 0;
-    const IMAGE_COMPRESSION_PROCESSED     = 1;
-    const IMAGE_COMPRESSION_SKIPPED       = 2;
+    const IMAGE_COMPRESSION_PROCESSED = 1;
+    const IMAGE_COMPRESSION_SKIPPED = 2;
 
     /**
      * @param int $status
      * @param int $limit
-     * @return array
      * @throws \InvalidArgumentException
+     * @return array
      */
     public function findByImageCompressionStatus($status = self::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
     {
@@ -96,13 +95,13 @@ class FileRepository extends BaseFileRepository
             )
             ->orderBy('sys_file.tstamp', 'ASC');
 
-            if ($limit > 0) {
-                $qb->setMaxResults($limit);
-            }
+        if ($limit > 0) {
+            $qb->setMaxResults($limit);
+        }
 
-            $res = $qb->execute();
+        $res = $qb->execute();
 
-            return $res->fetchAll();
+        return $res->fetchAll();
     }
 
     /**
@@ -115,7 +114,7 @@ class FileRepository extends BaseFileRepository
      */
     protected function getRecordsCompat($status, $limit)
     {
-        $enabledFieldsWhereClause= BackendUtility::BEenableFields('sys_file');
+        $enabledFieldsWhereClause = BackendUtility::BEenableFields('sys_file');
         $enabledFieldsWhereClause .= BackendUtility::deleteClause('sys_file');
 
         return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(

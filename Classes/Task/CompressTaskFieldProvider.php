@@ -21,13 +21,12 @@ namespace Codemonkey1988\ImageCompression\Task;
 
 use TYPO3\CMS\Core\Messaging\FlashMessage;
 use TYPO3\CMS\Scheduler\AdditionalFieldProviderInterface;
-use TYPO3\CMS\Scheduler\Task\AbstractTask;
 use TYPO3\CMS\Scheduler\Controller\SchedulerModuleController;
+use TYPO3\CMS\Scheduler\Task\AbstractTask;
 
 /**
  * Class CompressTaskFieldProvider
  *
- * @package Codemonkey1988\ImageCompression\Task
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
@@ -66,7 +65,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         return [
             $filesPerRunId => $this->generateFieldPerRunField($filesPerRunId),
             $compressOriginal => $this->generateCompressOriginalField($compressOriginal),
-            $compressProcessed => $this->generateCompressProcessedField($compressProcessed)
+            $compressProcessed => $this->generateCompressProcessedField($compressProcessed),
         ];
     }
 
@@ -75,7 +74,8 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param SchedulerModuleController $schedulerModule
      * @return bool
      */
-    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule) {
+    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule)
+    {
         if (!is_numeric($submittedData['files_per_run'])) {
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('Value has to be numeric'), FlashMessage::ERROR);
 
@@ -116,12 +116,11 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
 
         $fieldHtml = '<input type="text" name="tx_scheduler[files_per_run]" id="' . $fieldId . '" value="' . htmlspecialchars($taskInfo['files_per_run']) . '" />';
 
-
         return [
-            'code'     => $fieldHtml,
-            'label'    => 'Files per run',
-            'cshKey'   => '_MOD_tools_txschedulerM1',
-            'cshLabel' => $fieldId
+            'code' => $fieldHtml,
+            'label' => 'Files per run',
+            'cshKey' => '_MOD_tools_txschedulerM1',
+            'cshLabel' => $fieldId,
         ];
     }
 
@@ -148,10 +147,10 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         $fieldHtml .= ' />';
 
         return [
-            'code'     => $fieldHtml,
-            'label'    => 'Compress original files',
-            'cshKey'   => '_MOD_tools_txschedulerM1',
-            'cshLabel' => $fieldId
+            'code' => $fieldHtml,
+            'label' => 'Compress original files',
+            'cshKey' => '_MOD_tools_txschedulerM1',
+            'cshLabel' => $fieldId,
         ];
     }
 
@@ -178,10 +177,10 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         $fieldHtml .= ' />';
 
         return [
-            'code'     => $fieldHtml,
-            'label'    => 'Compress original files',
-            'cshKey'   => '_MOD_tools_txschedulerM1',
-            'cshLabel' => $fieldId
+            'code' => $fieldHtml,
+            'label' => 'Compress original files',
+            'cshKey' => '_MOD_tools_txschedulerM1',
+            'cshLabel' => $fieldId,
         ];
     }
 }

@@ -1,5 +1,4 @@
 <?php
-
 namespace Codemonkey1988\ImageCompression\Compressor;
 
 /***************************************************************
@@ -27,7 +26,6 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 /**
  * Class CompressionService
  *
- * @package Codemonkey1988\ImageCompression\Service
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class TinifyCompressor implements CompressorInterface
@@ -61,7 +59,7 @@ class TinifyCompressor implements CompressorInterface
     public function injectConfigurationUtility(\TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility)
     {
         $this->configurationUtility = $configurationUtility;
-        $this->configuration        = $this->configurationUtility->getCurrentConfiguration('image_compression');
+        $this->configuration = $this->configurationUtility->getCurrentConfiguration('image_compression');
     }
 
     /**
@@ -87,10 +85,10 @@ class TinifyCompressor implements CompressorInterface
      */
     public function canCompress(FileInterface $file)
     {
-        $from             = new \DateTime('first day of this month 00:00:01');
-        $to               = new \DateTime('last day of this month 23:59:59');
+        $from = new \DateTime('first day of this month 00:00:01');
+        $to = new \DateTime('last day of this month 23:59:59');
         $compressionCount = $this->compressionLogService->count($from, $to);
-        $limitReached     = $this->getCompressionCount() > 0 && $compressionCount < $this->getCompressionCount();
+        $limitReached = $this->getCompressionCount() > 0 && $compressionCount < $this->getCompressionCount();
 
         return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitReached;
     }
@@ -102,7 +100,7 @@ class TinifyCompressor implements CompressorInterface
     public function compress(FileInterface $file)
     {
         try {
-            $publicUrl  = PATH_site . $file->getPublicUrl();
+            $publicUrl = PATH_site . $file->getPublicUrl();
             $sourceFile = \Tinify\fromFile($publicUrl);
             $sourceFile->toFile($publicUrl);
 

@@ -22,7 +22,6 @@
  *
  * This copyright notice MUST APPEAR in all copies of the script!
  */
-
 $ll = 'LLL:EXT:image_compression/Resources/Private/Language/locallang_db.xlf:';
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_file_metadata', [
@@ -35,10 +34,10 @@ $ll = 'LLL:EXT:image_compression/Resources/Private/Language/locallang_db.xlf:';
             'items' => [
                 [$ll . 'sys_file.image_compression_status.0', 0],
                 [$ll . 'sys_file.image_compression_status.1', 1],
-                [$ll . 'sys_file.image_compression_status.2', 2]
-            ]
-        ]
-    ]
+                [$ll . 'sys_file.image_compression_status.2', 2],
+            ],
+        ],
+    ],
 ]);
 
 \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(

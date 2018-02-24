@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 /**
  * Class ProcessedFileRepository
  *
- * @package Codemonkey1988\ImageCompression\Resource
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class ProcessedFileRepository extends BaseProcessedFileRepository
@@ -35,8 +34,8 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
     /**
      * @param int $status
      * @param int $limit
-     * @return array
      * @throws \InvalidArgumentException
+     * @return array
      */
     public function findByImageCompressionStatus($status = FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
     {

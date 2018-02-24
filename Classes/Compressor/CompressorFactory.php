@@ -26,7 +26,6 @@ use TYPO3\CMS\Extbase\Object\ObjectManager;
 /**
  * Class CompressorFactory
  *
- * @package Codemonkey1988\ImageCompression\Compressor
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class CompressorFactory
@@ -37,7 +36,7 @@ class CompressorFactory
      * @param FileInterface $file
      * @return CompressorInterface|null
      */
-    static public function getCompressor(FileInterface $file)
+    public static function getCompressor(FileInterface $file)
     {
         $imageCompressor = null;
         /** @var ObjectManager $objectManager */

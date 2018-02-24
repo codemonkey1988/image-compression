@@ -26,7 +26,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 /**
  * Class CompressionService
  *
- * @package Codemonkey1988\ImageCompression\Service
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class CompressionService
@@ -53,8 +52,8 @@ class CompressionService
      */
     public function compress(FileInterface $file)
     {
-        $uid     = $file->getProperty('uid');
-        $table   = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
+        $uid = $file->getProperty('uid');
+        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
         $compressor = CompressorFactory::getCompressor($file);
 
         if ($compressor !== null) {
@@ -97,7 +96,7 @@ class CompressionService
             $table,
             $where,
             [
-                'image_compression_status' => $status
+                'image_compression_status' => $status,
             ]
         );
     }

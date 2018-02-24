@@ -31,11 +31,11 @@ return [
         'rootLevel' => '1',
         'title' => $ll . 'tx_imagecompression_domain_model_log',
         'typeicon_classes' => [
-            'default' => 'mimetypes-x-content-text'
-        ]
+            'default' => 'mimetypes-x-content-text',
+        ],
     ],
     'interface' => [
-        'showRecordFieldList' => 'ref,tablename'
+        'showRecordFieldList' => 'ref,tablename',
     ],
     'columns' => [
         'ref' => [
@@ -43,8 +43,8 @@ return [
             'config' => [
                 'type' => 'input',
                 'size' => 11,
-                'eval' => 'int,required'
-            ]
+                'eval' => 'int,required',
+            ],
         ],
         'tablename' => [
             'label' => $ll . 'tx_imagecompression_domain_model_log.tablename',
@@ -52,8 +52,8 @@ return [
                 'type' => 'input',
                 'size' => 25,
                 'max' => 25,
-                'eval' => 'trim,required'
-            ]
+                'eval' => 'trim,required',
+            ],
         ],
         'compressor' => [
             'label' => $ll . 'tx_imagecompression_domain_model_log.compressor',
@@ -61,13 +61,13 @@ return [
                 'type' => 'input',
                 'size' => 25,
                 'max' => 25,
-                'eval' => 'trim'
-            ]
-        ]
+                'eval' => 'trim',
+            ],
+        ],
     ],
     'types' => [
         '0' => ['showitem' => '
 			ref,tablename,compressor
-		']
-    ]
+		'],
+    ],
 ];

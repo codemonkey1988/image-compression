@@ -26,7 +26,6 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 /**
  * Class ResourceStorageSignal
  *
- * @package Codemonkey1988\ImageCompression
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
 class ResourceStorageSignal
@@ -79,7 +78,7 @@ class ResourceStorageSignal
      * Signal when a new file has been added.
      *
      * @param File   $file
-     * @param String $tmpName
+     * @param string $tmpName
      * @return void
      */
     public function postFileReplace(File $file, $tmpName)
