@@ -118,7 +118,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
 
         return [
             'code' => $fieldHtml,
-            'label' => 'Files per run',
+            'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.files_per_run',
             'cshKey' => '_MOD_tools_txschedulerM1',
             'cshLabel' => $fieldId,
         ];
@@ -148,7 +148,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
 
         return [
             'code' => $fieldHtml,
-            'label' => 'Compress original files',
+            'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.compress_original',
             'cshKey' => '_MOD_tools_txschedulerM1',
             'cshLabel' => $fieldId,
         ];
@@ -178,7 +178,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
 
         return [
             'code' => $fieldHtml,
-            'label' => 'Compress original files',
+            'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.compress_processed',
             'cshKey' => '_MOD_tools_txschedulerM1',
             'cshLabel' => $fieldId,
         ];
