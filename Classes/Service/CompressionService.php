@@ -78,9 +78,9 @@ class CompressionService
     }
 
     /**
-     * @param int    $fileUid
+     * @param int $fileUid
      * @param string $table
-     * @param int    $status
+     * @param int $status
      * @return void
      */
     protected function updateCompressionStatus($fileUid, $table, $status)

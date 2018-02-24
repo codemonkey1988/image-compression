@@ -60,7 +60,7 @@ class ResourceStorageSignal
     /**
      * Signal when a new file has been added.
      *
-     * @param File   $file
+     * @param File $file
      * @param Folder $folder
      * @return void
      */
@@ -77,7 +77,7 @@ class ResourceStorageSignal
     /**
      * Signal when a new file has been added.
      *
-     * @param File   $file
+     * @param File $file
      * @param string $tmpName
      * @return void
      */

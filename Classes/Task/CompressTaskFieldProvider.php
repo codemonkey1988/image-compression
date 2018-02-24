@@ -47,8 +47,8 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
     protected $schedulerModule;
 
     /**
-     * @param array                     $taskInfo
-     * @param AbstractTask              $task
+     * @param array $taskInfo
+     * @param AbstractTask $task
      * @param SchedulerModuleController $schedulerModule
      * @return array
      */
@@ -70,7 +70,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
     }
 
     /**
-     * @param array                     $submittedData
+     * @param array $submittedData
      * @param SchedulerModuleController $schedulerModule
      * @return bool
      */
@@ -90,7 +90,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
     }
 
     /**
-     * @param array        $submittedData
+     * @param array $submittedData
      * @param AbstractTask $task
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)

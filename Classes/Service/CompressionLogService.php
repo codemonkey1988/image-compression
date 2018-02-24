@@ -29,7 +29,7 @@ class CompressionLogService
     /**
      * Add a log entry.
      *
-     * @param int    $refUid
+     * @param int $refUid
      * @param string $refTablename
      * @param string $compressor
      * @return void
