@@ -73,7 +73,7 @@ class FileRepository extends BaseFileRepository
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(DefaultRestrictionContainer::class));
 
         $qb = $queryBuilder
-            ->select('sys_file.*', 'sys_file_metadata.*')
+            ->select('sys_file.*', 'metadata.*')
             ->from('sys_file')
             ->join(
                 'sys_file',
@@ -83,7 +83,7 @@ class FileRepository extends BaseFileRepository
             )
             ->where(
                 $queryBuilder->expr()->eq(
-                    'sys_file_metadata.image_compression_status',
+                    'metadata.image_compression_status',
                     $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
                 )
             )
