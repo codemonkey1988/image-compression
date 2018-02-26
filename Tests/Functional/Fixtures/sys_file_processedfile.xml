@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <!-- findUncompressedImages -->
+    <sys_file_processedfile>
+        <uid>1</uid>
+        <crdate>1519460655</crdate>
+        <tstamp>1519460655</tstamp>
+        <original>1</original>
+        <task_type>Image.CropScaleMask</task_type>
+        <configuration>a:0:{}</configuration>
+        <storage>1</storage>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_processedfile>
+
+    <!-- findCompressedImages -->
+    <sys_file_processedfile>
+        <uid>2</uid>
+        <crdate>1519460655</crdate>
+        <tstamp>1519460655</tstamp>
+        <original>2</original>
+        <task_type>Image.CropScaleMask</task_type>
+        <configuration>a:0:{}</configuration>
+        <storage>1</storage>
+        <image_compression_status>1</image_compression_status>
+    </sys_file_processedfile>
+
+    <!-- findSkippedImages -->
+    <sys_file_processedfile>
+        <uid>3</uid>
+        <crdate>1519460655</crdate>
+        <tstamp>1519460655</tstamp>
+        <original>3</original>
+        <task_type>Image.CropScaleMask</task_type>
+        <configuration>a:0:{}</configuration>
+        <storage>1</storage>
+        <image_compression_status>2</image_compression_status>
+    </sys_file_processedfile>
+</dataset>

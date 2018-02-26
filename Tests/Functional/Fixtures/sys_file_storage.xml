@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <sys_file_storage>
+        <uid>1</uid>
+        <pid>0</pid>
+        <crdate>1519460655</crdate>
+        <tstamp>1519460655</tstamp>
+        <cruser_id>0</cruser_id>
+        <deleted>0</deleted>
+        <name>Default</name>
+        <description/>
+        <driver>Local</driver>
+        <configuration>
+            <![CDATA[<?xml version="1.0" encoding="utf-8" standalone="yes" ?>
+            <T3FlexForms><data><sheet index="sDEF"><language index="lDEF"><field index="basePath"><value index="vDEF">typo3conf/ext/image_compression/Tests/Resources/</value></field><field index="pathType"><value index="vDEF">relative</value></field><field index="caseSensitive"><value index="vDEF">1</value></field></language></sheet></data></T3FlexForms>]]>
+        </configuration>
+        <is_default>1</is_default>
+        <is_browsable>1</is_browsable>
+        <is_public>1</is_public>
+        <is_writable>1</is_writable>
+        <is_online>1</is_online>
+        <processingfolder>_processed_</processingfolder>
+    </sys_file_storage>
+</dataset>

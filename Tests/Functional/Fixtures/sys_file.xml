@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <sys_file>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1519460655</tstamp>
+        <last_indexed>1519460655</last_indexed>
+        <missing>0</missing>
+        <storage>1</storage>
+        <type>2</type>
+        <metadata>0</metadata>
+        <identifier>sample.jpg</identifier>
+        <identifier_hash>4cdc2e4051736988e17aaab9b66e1ee15d0d6022</identifier_hash>
+        <folder_hash>/</folder_hash>
+        <extension>jpg</extension>
+        <mime_type>image/jpeg</mime_type>
+        <name>sample.jpg</name>
+        <sha1>0f1974883098d06bb8ec55eb7094c1dbd45feeed</sha1>
+        <size>8196</size>
+        <creation_date>1519460655</creation_date>
+        <modification_date>1519460655</modification_date>
+    </sys_file>
+</dataset>

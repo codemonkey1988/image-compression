@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<dataset>
+    <!-- findByImageCompressionStatus -->
+    <be_users>
+        <uid>1</uid>
+        <pid>0</pid>
+        <tstamp>1519460655</tstamp>
+        <username>admin</username>
+        <admin>1</admin>
+        <disableIPlock>1</disableIPlock>
+    </be_users>
+</dataset>
