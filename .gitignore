@@ -2,3 +2,4 @@
 /.Build
 .php_cs.cache
 composer.lock
+Tests/Resources/_processed_
