@@ -81,10 +81,10 @@ class TinifyCompressor implements CompressorInterface
     {
         $from = new \DateTime('first day of this month 00:00:01');
         $to = new \DateTime('last day of this month 23:59:59');
-        $compressionCount = $this->compressionLogService->count($from, $to);
-        $limitReached = $this->getCompressionCount() > 0 && $compressionCount < $this->getCompressionCount();
+        $currentCompressionCount = $this->compressionLogService->count($from, $to);
+        $limitNotReached = $this->getCompressionCount() > 0 && $currentCompressionCount < $this->getCompressionCount();
 
-        return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitReached;
+        return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitNotReached;
     }
 
     /**
