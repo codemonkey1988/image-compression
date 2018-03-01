@@ -87,7 +87,7 @@ class FileRepository extends BaseFileRepository
                     $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
                 )
             )
-            ->orderBy('sys_file.tstamp', 'ASC');
+            ->orderBy('sys_file.uid', 'ASC');
 
         if ($limit > 0) {
             $qb->setMaxResults($limit);
@@ -116,7 +116,7 @@ class FileRepository extends BaseFileRepository
             'sys_file, sys_file_metadata',
             'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_status=' . $status . $enabledFieldsWhereClause,
             '',
-            'sys_file.tstamp ASC',
+            'sys_file.uid ASC',
             ((int)$limit > 0) ? (int)$limit : ''
         );
     }

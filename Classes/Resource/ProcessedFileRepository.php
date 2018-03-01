@@ -80,7 +80,7 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
                     $queryBuilder->createNamedParameter('Image.CropScaleMask', \PDO::PARAM_STR)
                 )
             )
-            ->orderBy('tstamp', 'ASC');
+            ->orderBy('uid', 'ASC');
 
         if ($limit > 0) {
             $qb->setMaxResults($limit);
@@ -106,7 +106,7 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
             'sys_file_processedfile',
             'image_compression_status = ' . $status . ' AND task_type="Image.CropScaleMask"',
             '',
-            'tstamp ASC',
+            'uid ASC',
             ((int)$limit > 0) ? (int)$limit : ''
         );
     }
