@@ -3,15 +3,86 @@
     <sys_file_metadata>
         <uid>1</uid>
         <pid>0</pid>
-        <tstamp>1519460655</tstamp>
-        <crdate>1519460655</crdate>
-        <cruser_id>0</cruser_id>
-        <l10n_diffsource></l10n_diffsource>
+        <tstamp>1519927538</tstamp>
+        <crdate>1519927538</crdate>
+        <cruser_id>1</cruser_id>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+        <l10n_diffsource/>
         <file>1</file>
-        <title>sample</title>
+        <title/>
         <width>400</width>
-        <height>200</height>
-        <visible>1</visible>
+        <height>250</height>
+        <description/>
+        <alternative/>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_metadata>
+    <sys_file_metadata>
+        <uid>2</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <crdate>1519927538</crdate>
+        <cruser_id>1</cruser_id>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+        <l10n_diffsource/>
+        <file>2</file>
+        <title/>
+        <width>600</width>
+        <height>350</height>
+        <description/>
+        <alternative/>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_metadata>
+    <sys_file_metadata>
+        <uid>3</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <crdate>1519927538</crdate>
+        <cruser_id>1</cruser_id>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+        <l10n_diffsource/>
+        <file>3</file>
+        <title/>
+        <width>400</width>
+        <height>250</height>
+        <description/>
+        <alternative/>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_metadata>
+    <sys_file_metadata>
+        <uid>4</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <crdate>1519927538</crdate>
+        <cruser_id>1</cruser_id>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+        <l10n_diffsource/>
+        <file>4</file>
+        <title/>
+        <width>600</width>
+        <height>350</height>
+        <description/>
+        <alternative/>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_metadata>
+    <sys_file_metadata>
+        <uid>5</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <crdate>1519927538</crdate>
+        <cruser_id>1</cruser_id>
+        <sys_language_uid>0</sys_language_uid>
+        <l10n_parent>0</l10n_parent>
+        <l10n_diffsource/>
+        <file>5</file>
+        <title/>
+        <width>433</width>
+        <height>512</height>
+        <description/>
+        <alternative/>
         <image_compression_status>0</image_compression_status>
     </sys_file_metadata>
 </dataset>

@@ -3,21 +3,101 @@
     <sys_file>
         <uid>1</uid>
         <pid>0</pid>
-        <tstamp>1519460655</tstamp>
-        <last_indexed>1519460655</last_indexed>
+        <tstamp>1519927538</tstamp>
+        <last_indexed>1519927538</last_indexed>
         <missing>0</missing>
         <storage>1</storage>
         <type>2</type>
         <metadata>0</metadata>
-        <identifier>sample.jpg</identifier>
-        <identifier_hash>4cdc2e4051736988e17aaab9b66e1ee15d0d6022</identifier_hash>
-        <folder_hash>/</folder_hash>
+        <identifier>/400x250.jpg</identifier>
+        <identifier_hash>d6d06b3d362bd1e9448b38e1c2a5bc28f41521eb</identifier_hash>
+        <folder_hash>42099b4af021e53fd8fd4e056c2568d7c2e3ffa8</folder_hash>
         <extension>jpg</extension>
         <mime_type>image/jpeg</mime_type>
-        <name>sample.jpg</name>
-        <sha1>0f1974883098d06bb8ec55eb7094c1dbd45feeed</sha1>
-        <size>8196</size>
-        <creation_date>1519460655</creation_date>
-        <modification_date>1519460655</modification_date>
+        <name>400x250.jpg</name>
+        <sha1>a197252814f34d8e2df6f02cd7b0c2fa23a92d90</sha1>
+        <size>30552</size>
+        <creation_date>1519927538</creation_date>
+        <modification_date>1519927537</modification_date>
+    </sys_file>
+    <sys_file>
+        <uid>2</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <last_indexed>1519927538</last_indexed>
+        <missing>0</missing>
+        <storage>1</storage>
+        <type>2</type>
+        <metadata>0</metadata>
+        <identifier>/600x350.jpg</identifier>
+        <identifier_hash>8f1fff557323c91bee7e9cdecae1035676b3d7fe</identifier_hash>
+        <folder_hash>42099b4af021e53fd8fd4e056c2568d7c2e3ffa8</folder_hash>
+        <extension>jpg</extension>
+        <mime_type>image/jpeg</mime_type>
+        <name>600x350.jpg</name>
+        <sha1>a197252814f34d8e2df6f02cd7b0c2fa23a92d90</sha1>
+        <size>21797</size>
+        <creation_date>1519927538</creation_date>
+        <modification_date>1519927537</modification_date>
+    </sys_file>
+    <sys_file>
+        <uid>3</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <last_indexed>1519927538</last_indexed>
+        <missing>0</missing>
+        <storage>1</storage>
+        <type>2</type>
+        <metadata>0</metadata>
+        <identifier>/400x250.png</identifier>
+        <identifier_hash>99b86d159ee21c4ec60bdb1c671ef5b25f3ea1bb</identifier_hash>
+        <folder_hash>42099b4af021e53fd8fd4e056c2568d7c2e3ffa8</folder_hash>
+        <extension>png</extension>
+        <mime_type>image/png</mime_type>
+        <name>400x250.png</name>
+        <sha1>7609488933a41a0f3f53a7d53682aafb067e3659</sha1>
+        <size>213318</size>
+        <creation_date>1519927538</creation_date>
+        <modification_date>1519927537</modification_date>
+    </sys_file>
+    <sys_file>
+        <uid>4</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <last_indexed>1519927538</last_indexed>
+        <missing>0</missing>
+        <storage>1</storage>
+        <type>2</type>
+        <metadata>0</metadata>
+        <identifier>/600x350.png</identifier>
+        <identifier_hash>570a602b81f1da7dc721dfe83ece30b5fa91b9bb</identifier_hash>
+        <folder_hash>42099b4af021e53fd8fd4e056c2568d7c2e3ffa8</folder_hash>
+        <extension>png</extension>
+        <mime_type>image/png</mime_type>
+        <name>600x350.jpg</name>
+        <sha1>d48735f538fb3a7133c44348a7c123b7edb1caf9</sha1>
+        <size>200748</size>
+        <creation_date>1519927538</creation_date>
+        <modification_date>1519927537</modification_date>
+    </sys_file>
+    <sys_file>
+        <uid>5</uid>
+        <pid>0</pid>
+        <tstamp>1519927538</tstamp>
+        <last_indexed>1519927538</last_indexed>
+        <missing>0</missing>
+        <storage>1</storage>
+        <type>2</type>
+        <metadata>0</metadata>
+        <identifier>/typo3.svg</identifier>
+        <identifier_hash>7d78ec584e47baa209ad076af41cc3ea3bf3ccc0</identifier_hash>
+        <folder_hash>42099b4af021e53fd8fd4e056c2568d7c2e3ffa8</folder_hash>
+        <extension>svg</extension>
+        <mime_type>image/svg+xml</mime_type>
+        <name>typo3.svg</name>
+        <sha1>9e562c242b84bd61e5e5686620304b4e5290730b</sha1>
+        <size>407</size>
+        <creation_date>1519927538</creation_date>
+        <modification_date>1519927537</modification_date>
     </sys_file>
 </dataset>

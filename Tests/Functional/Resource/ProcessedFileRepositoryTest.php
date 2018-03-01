@@ -76,9 +76,9 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
 
         $files = $this->processedFileRepository->findByImageCompressionStatus(0, 1);
 
-        $this->assertTrue(is_array($files) && count($files) === 1);
-        $this->assertEquals(get_class($files[0]), ProcessedFile::class);
-        $this->assertEquals($files[0]->getUid(), 1);
+        $this->assertTrue(is_array($files) && count($files) === 1, 'There is more or less than one image');
+        $this->assertEquals(get_class($files[0]), ProcessedFile::class, 'The first entry of $files is not of object type ProcessedFile');
+        $this->assertEquals($files[0]->getUid(), 10, 'The first image does not have the uid 1');
     }
 
     /**
@@ -90,6 +90,6 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
     {
         $files = $this->processedFileRepository->findByImageCompressionStatus(0, 1);
 
-        $this->assertTrue(is_array($files) && count($files) === 0);
+        $this->assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
     }
 }

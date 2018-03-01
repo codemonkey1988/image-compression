@@ -1,38 +1,108 @@
 <?xml version="1.0" encoding="utf-8"?>
 <dataset>
-    <!-- findUncompressedImages -->
+    <!-- Generated preview images -->
     <sys_file_processedfile>
         <uid>1</uid>
-        <crdate>1519460655</crdate>
-        <tstamp>1519460655</tstamp>
-        <original>1</original>
-        <task_type>Image.CropScaleMask</task_type>
-        <configuration>a:0:{}</configuration>
+        <crdate>1519927538</crdate>
+        <tstamp>1519927538</tstamp>
         <storage>1</storage>
+        <original>1</original>
+        <identifier>/_processed_/6/d/preview_400x250_3dc4a6c059.jpg</identifier>
+        <name>preview_400x250_3dc4a6c059.jpg</name>
+        <configuration>a:2:{s:5:"width";i:64;s:6:"height";i:64;}</configuration>
+        <configurationsha1>551dfa8957f1a04693c61acf34bc959a1ca971c4</configurationsha1>
+        <originalfilesha1>a197252814f34d8e2df6f02cd7b0c2fa23a92d90</originalfilesha1>
+        <task_type>Image.Preview</task_type>
+        <checksum>3dc4a6c059</checksum>
+        <width>64</width>
+        <height>40</height>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_processedfile>
+    <sys_file_processedfile>
+        <uid>2</uid>
+        <crdate>1519927538</crdate>
+        <tstamp>1519927538</tstamp>
+        <storage>1</storage>
+        <original>2</original>
+        <identifier>/_processed_/1/7/preview_600x350_87d023a569.jpg</identifier>
+        <name>preview_600x350_87d023a569.jpg</name>
+        <configuration>a:2:{s:5:"width";i:64;s:6:"height";i:64;}</configuration>
+        <configurationsha1>551dfa8957f1a04693c61acf34bc959a1ca971c4</configurationsha1>
+        <originalfilesha1>2dbadda3370120a7699c0a1d9bd0127ea2cba06c</originalfilesha1>
+        <task_type>Image.Preview</task_type>
+        <checksum>87d023a569</checksum>
+        <width>64</width>
+        <height>37</height>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_processedfile>
+    <sys_file_processedfile>
+        <uid>3</uid>
+        <crdate>1519927538</crdate>
+        <tstamp>1519927538</tstamp>
+        <storage>1</storage>
+        <original>3</original>
+        <identifier>/_processed_/c/d/preview_400x250_5f7a1c1964.png</identifier>
+        <name>preview_400x250_5f7a1c1964.png</name>
+        <configuration>a:2:{s:5:"width";i:64;s:6:"height";i:64;}</configuration>
+        <configurationsha1>551dfa8957f1a04693c61acf34bc959a1ca971c4</configurationsha1>
+        <originalfilesha1>7609488933a41a0f3f53a7d53682aafb067e3659</originalfilesha1>
+        <task_type>Image.Preview</task_type>
+        <checksum>5f7a1c1964</checksum>
+        <width>64</width>
+        <height>40</height>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_processedfile>
+    <sys_file_processedfile>
+        <uid>4</uid>
+        <crdate>1519927538</crdate>
+        <tstamp>1519927538</tstamp>
+        <storage>1</storage>
+        <original>4</original>
+        <identifier>/_processed_/3/7/preview_600x350_79906dd02a.png</identifier>
+        <name>preview_600x350_79906dd02a.png</name>
+        <configuration>a:2:{s:5:"width";i:64;s:6:"height";i:64;}</configuration>
+        <configurationsha1>551dfa8957f1a04693c61acf34bc959a1ca971c4</configurationsha1>
+        <originalfilesha1>d48735f538fb3a7133c44348a7c123b7edb1caf9</originalfilesha1>
+        <task_type>Image.Preview</task_type>
+        <checksum>79906dd02a</checksum>
+        <width>64</width>
+        <height>37</height>
+        <image_compression_status>0</image_compression_status>
+    </sys_file_processedfile>
+    <sys_file_processedfile>
+        <uid>5</uid>
+        <crdate>1519927538</crdate>
+        <tstamp>1519927538</tstamp>
+        <storage>1</storage>
+        <original>5</original>
+        <identifier/>
+        <name/>
+        <configuration>a:2:{s:5:"width";i:64;s:6:"height";i:64;}</configuration>
+        <configurationsha1>551dfa8957f1a04693c61acf34bc959a1ca971c4</configurationsha1>
+        <originalfilesha1>9e562c242b84bd61e5e5686620304b4e5290730b</originalfilesha1>
+        <task_type>Image.Preview</task_type>
+        <checksum>e25f3e799c</checksum>
+        <width>64</width>
+        <height>64</height>
         <image_compression_status>0</image_compression_status>
     </sys_file_processedfile>
 
-    <!-- findCompressedImages -->
+    <!-- findUncompressedImages -->
     <sys_file_processedfile>
-        <uid>2</uid>
-        <crdate>1519460655</crdate>
-        <tstamp>1519460655</tstamp>
-        <original>2</original>
-        <task_type>Image.CropScaleMask</task_type>
-        <configuration>a:0:{}</configuration>
+        <uid>10</uid>
+        <crdate>1519927538</crdate>
+        <tstamp>1519927538</tstamp>
         <storage>1</storage>
-        <image_compression_status>1</image_compression_status>
-    </sys_file_processedfile>
-
-    <!-- findSkippedImages -->
-    <sys_file_processedfile>
-        <uid>3</uid>
-        <crdate>1519460655</crdate>
-        <tstamp>1519460655</tstamp>
-        <original>3</original>
+        <original>1</original>
+        <identifier>/_processed_/c/d/csm_400x250_45d42dff6c.png</identifier>
+        <name>csm_400x250_45d42dff6c.png</name>
+        <configuration>a:7:{s:5:"width";N;s:6:"height";N;s:8:"minWidth";N;s:9:"minHeight";N;s:8:"maxWidth";i:320;s:9:"maxHeight";N;s:4:"crop";N;}</configuration>
+        <configurationsha1>0f7aeea1d7b5bf29deed49a1b61426faad0279d6</configurationsha1>
+        <originalfilesha1>0f7aeea1d7b5bf29deed49a1b61426faad0279d6</originalfilesha1>
         <task_type>Image.CropScaleMask</task_type>
-        <configuration>a:0:{}</configuration>
-        <storage>1</storage>
-        <image_compression_status>2</image_compression_status>
+        <checksum>45d42dff6c</checksum>
+        <width>320</width>
+        <height>200</height>
+        <image_compression_status>0</image_compression_status>
     </sys_file_processedfile>
 </dataset>
