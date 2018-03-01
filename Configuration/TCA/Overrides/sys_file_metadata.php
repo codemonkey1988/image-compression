@@ -3,7 +3,7 @@
 /**
  * Copyright notice
  *
- *  (c) 2017 arndtteunissen <dev@arndtteunissen.de>
+ *  (c) 2018 Tim Schreiner <schreiner.tim@gmail.com>
  *  All rights reserved
  *
  * This script is part of the TYPO3 project. The TYPO3 project is
@@ -22,27 +22,34 @@
  *
  * This copyright notice MUST APPEAR in all copies of the script!
  */
-$ll = 'LLL:EXT:image_compression/Resources/Private/Language/locallang_db.xlf:';
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_file_metadata', [
-    'image_compression_status' => [
-        'label' => $ll . 'sys_file.image_compression_status',
-        'exclude' => 1,
-        'config' => [
-            'type' => 'select',
-            'renderType' => 'selectSingle',
-            'items' => [
-                [$ll . 'sys_file.image_compression_status.0', 0],
-                [$ll . 'sys_file.image_compression_status.1', 1],
-                [$ll . 'sys_file.image_compression_status.2', 2],
-            ],
-        ],
-    ],
-]);
+$boot = function() {
+    $ll = 'LLL:EXT:image_compression/Resources/Private/Language/locallang_db.xlf:';
 
-\TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addToAllTCAtypes(
-    'sys_file_metadata',
-    'image_compression_status',
-    '',
-    'after:alternative'
-);
+    if (\TYPO3\CMS\Core\Utility\GeneralUtility::compat_version('8.6.0')) {
+        $config = [
+            'type' => 'input',
+            'renderType' => 'inputDateTime',
+            'dbType' => 'datetime',
+            'eval' => 'datetime',
+        ];
+    } else {
+        $config = [
+            'type' => 'input',
+            'size' => '13',
+            'eval' => 'datetime',
+            'default' => '0'
+        ];
+    }
+
+    \TYPO3\CMS\Core\Utility\ExtensionManagementUtility::addTCAcolumns('sys_file_metadata', [
+        'image_compression_last_compressed' => [
+            'label' => $ll . 'sys_file.image_compression_last_compressed',
+            'exclude' => 1,
+            'config' => $config
+        ]
+    ]);
+};
+
+$boot();
+unset($boot);

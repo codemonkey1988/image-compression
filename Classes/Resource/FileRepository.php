@@ -26,28 +26,19 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FileRepository extends BaseFileRepository
 {
-    const IMAGE_COMPRESSION_NOT_PROCESSED = 0;
-    const IMAGE_COMPRESSION_PROCESSED = 1;
-    const IMAGE_COMPRESSION_SKIPPED = 2;
-
     /**
-     * @param int $status
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findByImageCompressionStatus($status = self::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
+    public function findNoncompressedImages($limit = 0)
     {
-        if ($status !== self::IMAGE_COMPRESSION_NOT_PROCESSED && $status !== self::IMAGE_COMPRESSION_PROCESSED && $status !== self::IMAGE_COMPRESSION_SKIPPED) {
-            throw new \InvalidArgumentException('Invalid status given.', 1494225066);
-        }
-
         $fileObjecs = [];
 
         if (GeneralUtility::compat_version('8.6.0')) {
-            $rows = $this->getRecords($status, $limit);
+            $rows = $this->getRecords($limit);
         } else {
-            $rows = $this->getRecordsCompat($status, $limit);
+            $rows = $this->getRecordsCompat($limit);
         }
 
         foreach ($rows as $row) {
@@ -60,12 +51,11 @@ class FileRepository extends BaseFileRepository
     /**
      * Find records for TYPO3 v8 and higher using docrtine.
      *
-     * @param int $status
      * @param int $limit
      *
      * @return array
      */
-    protected function getRecords($status, $limit)
+    protected function getRecords($limit)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('sys_file');
@@ -83,8 +73,8 @@ class FileRepository extends BaseFileRepository
             )
             ->where(
                 $queryBuilder->expr()->eq(
-                    'metadata.image_compression_status',
-                    $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
+                    'metadata.image_compression_last_compressed',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 )
             )
             ->orderBy('sys_file.uid', 'ASC');
@@ -101,12 +91,11 @@ class FileRepository extends BaseFileRepository
     /**
      * Find records for TYPO3 v7
      *
-     * @param int $status
      * @param int $limit
      *
      * @return array
      */
-    protected function getRecordsCompat($status, $limit)
+    protected function getRecordsCompat($limit)
     {
         $enabledFieldsWhereClause = BackendUtility::BEenableFields('sys_file');
         $enabledFieldsWhereClause .= BackendUtility::deleteClause('sys_file');
@@ -114,7 +103,7 @@ class FileRepository extends BaseFileRepository
         return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             'sys_file.*, sys_file_metadata.*',
             'sys_file, sys_file_metadata',
-            'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_status=' . $status . $enabledFieldsWhereClause,
+            'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_last_compressed=0' . $enabledFieldsWhereClause,
             '',
             'sys_file.uid ASC',
             ((int)$limit > 0) ? (int)$limit : ''

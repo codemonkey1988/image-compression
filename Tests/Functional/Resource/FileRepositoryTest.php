@@ -73,7 +73,7 @@ class FileRepositoryTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
 
-        $files = $this->fileRepository->findByImageCompressionStatus(0, 1);
+        $files = $this->fileRepository->findNoncompressedImages(1);
 
         $this->assertTrue(is_array($files) && count($files) === 1, 'There is more or less than one image');
         $this->assertEquals(get_class($files[0]), File::class, 'The first entry of $files is not of object type File');
@@ -87,7 +87,7 @@ class FileRepositoryTest extends FunctionalTestCase
      */
     public function findUncompressedImagesNoResult()
     {
-        $files = $this->fileRepository->findByImageCompressionStatus(0, 1);
+        $files = $this->fileRepository->findNoncompressedImages(1);
 
         $this->assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
     }

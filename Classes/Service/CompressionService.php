@@ -16,6 +16,8 @@ namespace Codemonkey1988\ImageCompression\Service;
 use Codemonkey1988\ImageCompression\Compressor\CompressorFactory;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Core\Database\ConnectionPool;
 
 /**
  * Class CompressionService
@@ -28,54 +30,64 @@ class CompressionService
      * Compress an image file.
      *
      * @param FileInterface $file
-     * @return bool
+     * @return void
      */
     public function compress(FileInterface $file)
     {
-        $uid = $file->getProperty('uid');
-        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
         $compressor = CompressorFactory::getCompressor($file);
 
-        if ($compressor !== null) {
-            $success = $compressor->compress($file);
-
-            $this->updateCompressionStatus($uid, $table, ($success === true) ? 1 : 2);
-
-            return $success;
+        if ($compressor !== null && $compressor->compress($file) === true) {
+            if (GeneralUtility::compat_version('8.6.0')) {
+                $this->updateCompressionStatus($file);
+            } else {
+                $this->updateCompressionStatusCompat($file);
+            }
         }
-
-        return true;
     }
 
     /**
-     * @param int $fileUid
-     * @param string $table
-     * @param int $status
+     * Update the compression status for TYPO3 v8 and higher.
+     *
+     * @param FileInterface $file
      * @return void
      */
-    protected function updateCompressionStatus($fileUid, $table, $status)
+    protected function updateCompressionStatus(FileInterface $file)
     {
-        $where = 'uid=' . $fileUid;
+        $now = new \DateTime();
+        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
+        $field = ($file instanceof File) ? 'file' : 'uid';
 
-        if ($table === 'sys_file_metadata') {
-            $where = 'file=' . $fileUid;
-        }
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table);
 
-        // Update compression status for this file.
-        $this->getDatabaseConnection()->exec_UPDATEquery(
-            $table,
-            $where,
-            [
-                'image_compression_status' => $status,
-            ]
-        );
+        $queryBuilder
+            ->update($table, 't')
+            ->where(
+                $queryBuilder->expr()->eq('t' . $field, $queryBuilder->createNamedParameter($file->getUid()))
+            )
+            ->set('t.image_compression_last_compressed', $now->getTimestamp())
+            ->execute();
     }
 
     /**
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * Update the compression status for TYPO3 v7.
+     *
+     * @param FileInterface $file
+     * @return void
      */
-    protected function getDatabaseConnection()
+    protected function updateCompressionStatusCompat(FileInterface $file)
     {
-        return $GLOBALS['TYPO3_DB'];
+        $now = new \DateTime();
+        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
+        $field = ($file instanceof File) ? 'file' : 'uid';
+
+        // Update compression status for this file.
+        $GLOBALS['TYPO3_DB']->exec_UPDATEquery(
+            $table,
+            $field . '=' . (int) $file->getUid(),
+            [
+                'image_compression_last_compressed' => $now->getTimestamp(),
+            ]
+        );
     }
 }

@@ -26,23 +26,18 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProcessedFileRepository extends BaseProcessedFileRepository
 {
     /**
-     * @param int $status
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findByImageCompressionStatus($status = FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
+    public function findNoncompressedImages($limit = 0)
     {
-        if ($status !== FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED && $status !== FileRepository::IMAGE_COMPRESSION_PROCESSED && $status !== FileRepository::IMAGE_COMPRESSION_SKIPPED) {
-            throw new \InvalidArgumentException('Invalid status given.', 1494225066);
-        }
-
         $fileObjecs = [];
 
         if (GeneralUtility::compat_version('8.6.0')) {
-            $rows = $this->getRecords($status, $limit);
+            $rows = $this->getRecords($limit);
         } else {
-            $rows = $this->getRecordsCompat($status, $limit);
+            $rows = $this->getRecordsCompat($limit);
         }
 
         foreach ($rows as $row) {
@@ -55,12 +50,11 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
     /**
      * Find records for TYPO3 v8 and higher using docrtine.
      *
-     * @param int $status
      * @param int $limit
      *
      * @return array
      */
-    protected function getRecords($status, $limit)
+    protected function getRecords($limit)
     {
         $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
             ->getQueryBuilderForTable('sys_file_processedfile');
@@ -72,8 +66,8 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
             ->from('sys_file_processedfile')
             ->where(
                 $queryBuilder->expr()->eq(
-                    'image_compression_status',
-                    $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
+                    'image_compression_last_compressed',
+                    $queryBuilder->createNamedParameter(0, \PDO::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
                     'task_type',
@@ -94,17 +88,16 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
     /**
      * Find records for TYPO3 v7
      *
-     * @param int $status
      * @param int $limit
      *
      * @return array
      */
-    protected function getRecordsCompat($status, $limit)
+    protected function getRecordsCompat($limit)
     {
         return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
             '*',
             'sys_file_processedfile',
-            'image_compression_status = ' . $status . ' AND task_type="Image.CropScaleMask"',
+            'image_compression_last_compressed=0 AND task_type="Image.CropScaleMask"',
             '',
             'uid ASC',
             ((int)$limit > 0) ? (int)$limit : ''

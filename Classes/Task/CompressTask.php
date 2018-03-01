@@ -77,7 +77,7 @@ class CompressTask extends AbstractTask
 
         /** @var FileRepository $fileRepository */
         $fileRepository = GeneralUtility::makeInstance(FileRepository::class);
-        $files = $fileRepository->findByImageCompressionStatus(FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, (int)$this->filesPerRun);
+        $files = $fileRepository->findNoncompressedImages((int)$this->filesPerRun);
 
         if ($files) {
             /** @var File $file */
@@ -100,7 +100,7 @@ class CompressTask extends AbstractTask
 
         /** @var ProcessedFileRepository $processedFileRepository */
         $processedFileRepository = GeneralUtility::makeInstance(ProcessedFileRepository::class);
-        $files = $processedFileRepository->findByImageCompressionStatus(FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, (int)$this->filesPerRun);
+        $files = $processedFileRepository->findNoncompressedImages((int)$this->filesPerRun);
 
         if ($files) {
             /** @var File $file */

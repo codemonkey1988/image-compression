@@ -3,43 +3,12 @@
 	<file source-language="en" product-name="image_compression">
 		<header/>
 		<body>
-			<trans-unit id="tx_imagecompression_domain_model_log">
-				<source>Image compression log</source>
-			</trans-unit>
-			<trans-unit id="tx_imagecompression_domain_model_log.ref">
-				<source>Reference UID</source>
-			</trans-unit>
-			<trans-unit id="tx_imagecompression_domain_model_log.tablename">
-				<source>Reference table name</source>
-			</trans-unit>
-			<trans-unit id="tx_imagecompression_domain_model_log.compressor">
-				<source>Used compressor</source>
+			<trans-unit id="sys_file.image_compression_last_compressed">
+				<source>Last compressed</source>
 			</trans-unit>
 
-			<trans-unit id="sys_file.image_compression_status">
-				<source>Compression status</source>
-			</trans-unit>
-			<trans-unit id="sys_file.image_compression_status.0">
-				<source>Not processed</source>
-			</trans-unit>
-			<trans-unit id="sys_file.image_compression_status.1">
-				<source>Processed</source>
-			</trans-unit>
-			<trans-unit id="sys_file.image_compression_status.2">
-				<source>Skipped</source>
-			</trans-unit>
-
-			<trans-unit id="sys_file_processedfile.image_compression_status">
-				<source>Compression status</source>
-			</trans-unit>
-			<trans-unit id="sys_file_processedfile.image_compression_status.0">
-				<source>Not processed</source>
-			</trans-unit>
-			<trans-unit id="sys_file_processedfile.image_compression_status.1">
-				<source>Processed</source>
-			</trans-unit>
-			<trans-unit id="sys_file_processedfile.image_compression_status.2">
-				<source>Skipped</source>
+			<trans-unit id="sys_file_processedfile.image_compression_last_compressed">
+				<source>Last compressed</source>
 			</trans-unit>
 		</body>
 	</file>

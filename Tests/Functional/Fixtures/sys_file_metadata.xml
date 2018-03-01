@@ -15,7 +15,7 @@
         <height>250</height>
         <description/>
         <alternative/>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_metadata>
     <sys_file_metadata>
         <uid>2</uid>
@@ -32,7 +32,7 @@
         <height>350</height>
         <description/>
         <alternative/>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_metadata>
     <sys_file_metadata>
         <uid>3</uid>
@@ -49,7 +49,7 @@
         <height>250</height>
         <description/>
         <alternative/>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_metadata>
     <sys_file_metadata>
         <uid>4</uid>
@@ -66,7 +66,7 @@
         <height>350</height>
         <description/>
         <alternative/>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_metadata>
     <sys_file_metadata>
         <uid>5</uid>
@@ -83,6 +83,6 @@
         <height>512</height>
         <description/>
         <alternative/>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_metadata>
 </dataset>

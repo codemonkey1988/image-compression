@@ -74,7 +74,7 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_processedfile.xml');
 
-        $files = $this->processedFileRepository->findByImageCompressionStatus(0, 1);
+        $files = $this->processedFileRepository->findNoncompressedImages(1);
 
         $this->assertTrue(is_array($files) && count($files) === 1, 'There is more or less than one image');
         $this->assertEquals(get_class($files[0]), ProcessedFile::class, 'The first entry of $files is not of object type ProcessedFile');
@@ -88,7 +88,7 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
      */
     public function findUncompressedImagesNoResult()
     {
-        $files = $this->processedFileRepository->findByImageCompressionStatus(0, 1);
+        $files = $this->processedFileRepository->findNoncompressedImages(1);
 
         $this->assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
     }
