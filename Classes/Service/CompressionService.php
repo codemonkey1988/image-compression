@@ -25,20 +25,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 class CompressionService
 {
     /**
-     * @var \Codemonkey1988\ImageCompression\Service\CompressionLogService
-     */
-    protected $compressionLogService;
-
-    /**
-     * @param \Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService
-     * @return void
-     */
-    public function injectCompressionLogService(\Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService)
-    {
-        $this->compressionLogService = $compressionLogService;
-    }
-
-    /**
      * Compress an image file.
      *
      * @param FileInterface $file
@@ -55,20 +41,13 @@ class CompressionService
 
             $this->updateCompressionStatus($uid, $table, ($success === true) ? 1 : 2);
 
-            // When the image could be successfully compressed, add it to the log.
-            if ($success) {
-                $this->compressionLogService->add($uid, $table, $compressor->getName());
-
-                return true;
-            }
-        } else {
-            // No matching compressor can be found.
-            $this->updateCompressionStatus($uid, $table, 2);
-
-            return true;
+            return $success;
         }
 
-        return false;
+        // No matching compressor can be found.
+        $this->updateCompressionStatus($uid, $table, 2);
+
+        return true;
     }
 
     /**
