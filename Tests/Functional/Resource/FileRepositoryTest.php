@@ -37,11 +37,6 @@ class FileRepositoryTest extends FunctionalTestCase
     /**
      * @var array
      */
-    protected $coreExtensionsToLoad = ['filemetadata'];
-
-    /**
-     * @var array
-     */
     protected $testExtensionsToLoad = ['typo3conf/ext/image_compression'];
 
     /**
