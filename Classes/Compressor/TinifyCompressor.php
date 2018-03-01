@@ -32,19 +32,6 @@ class TinifyCompressor implements CompressorInterface
      * @var array
      */
     protected $configuration;
-    /**
-     * @var \Codemonkey1988\ImageCompression\Service\CompressionLogService
-     */
-    protected $compressionLogService;
-
-    /**
-     * @param \Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService
-     * @return void
-     */
-    public function injectCompressionLogService(\Codemonkey1988\ImageCompression\Service\CompressionLogService $compressionLogService)
-    {
-        $this->compressionLogService = $compressionLogService;
-    }
 
     /**
      * @param ConfigurationUtility $configurationUtility
@@ -81,8 +68,7 @@ class TinifyCompressor implements CompressorInterface
     {
         $from = new \DateTime('first day of this month 00:00:01');
         $to = new \DateTime('last day of this month 23:59:59');
-        $currentCompressionCount = $this->compressionLogService->count($from, $to);
-        $limitNotReached = $this->getCompressionCount() > 0 && $currentCompressionCount < $this->getCompressionCount();
+        $limitNotReached = false;
 
         return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitNotReached;
     }

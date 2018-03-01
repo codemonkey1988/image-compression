@@ -44,9 +44,6 @@ class CompressionService
             return $success;
         }
 
-        // No matching compressor can be found.
-        $this->updateCompressionStatus($uid, $table, 2);
-
         return true;
     }
 
