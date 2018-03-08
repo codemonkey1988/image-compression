@@ -1,8 +1,8 @@
-# cat=basic/enable; type=boolean; label=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:enableCompressOnUpload
-enableCompressOnUpload = 1
-
 # customcategory=tinify=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:tinify
 # customsubcategory=config=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:config
+
+# cat=basic/enable; type=boolean; label=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:enableCompressOnUpload
+enableCompressOnUpload = 1
 
 # cat=tinify/config; type=string; label=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:tinifyApiKey
 tinifyApiKey =
