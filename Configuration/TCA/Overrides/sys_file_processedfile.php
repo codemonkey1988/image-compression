@@ -22,8 +22,7 @@
  *
  * This copyright notice MUST APPEAR in all copies of the script!
  */
-
-$boot = function() {
+$boot = function () {
     $ll = 'LLL:EXT:image_compression/Resources/Private/Language/locallang_db.xlf:';
 
     if (\TYPO3\CMS\Core\Utility\GeneralUtility::compat_version('8.6.0')) {
@@ -38,7 +37,7 @@ $boot = function() {
             'type' => 'input',
             'size' => '13',
             'eval' => 'datetime',
-            'default' => '0'
+            'default' => '0',
         ];
     }
 
@@ -46,8 +45,8 @@ $boot = function() {
         'image_compression_last_compressed' => [
             'label' => $ll . 'sys_file_processedfile.image_compression_last_compressed',
             'exclude' => 1,
-            'config' => $config
-        ]
+            'config' => $config,
+        ],
     ]);
 };
 

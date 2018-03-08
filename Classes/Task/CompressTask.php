@@ -13,8 +13,6 @@ namespace Codemonkey1988\ImageCompression\Task;
  *
  */
 
-use Codemonkey1988\ImageCompression\Resource\FileRepository;
-use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use Codemonkey1988\ImageCompression\Service\CompressionService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -38,6 +36,11 @@ class CompressTask extends AbstractTask
      * @var CompressionService
      */
     protected $compressionService;
+
+    /**
+     * @var array
+     */
+    protected $extensionConfiguration;
 
     /**
      * CompressTask constructor.
@@ -75,9 +78,7 @@ class CompressTask extends AbstractTask
             return;
         }
 
-        /** @var FileRepository $fileRepository */
-        $fileRepository = GeneralUtility::makeInstance(FileRepository::class);
-        $files = $fileRepository->findNoncompressedImages((int)$this->filesPerRun);
+        $files = $this->compressionService->getUncompressedOriginalFiles($this->filesPerRun);
 
         if ($files) {
             /** @var File $file */
@@ -98,9 +99,7 @@ class CompressTask extends AbstractTask
             return;
         }
 
-        /** @var ProcessedFileRepository $processedFileRepository */
-        $processedFileRepository = GeneralUtility::makeInstance(ProcessedFileRepository::class);
-        $files = $processedFileRepository->findNoncompressedImages((int)$this->filesPerRun);
+        $files = $this->compressionService->getUncompressedProcessedFiles($this->filesPerRun);
 
         if ($files) {
             /** @var File $file */
