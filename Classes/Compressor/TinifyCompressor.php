@@ -68,7 +68,7 @@ class TinifyCompressor implements CompressorInterface
         $to = new \DateTime('last day of this month 23:59:59');
         $limitNotReached = false;
 
-        return !empty($apiKey) && (in_array($file->getExtension(), $supportedExtensions)) && $limitNotReached;
+        return !empty($apiKey) && (in_array($file->getExtension(), $supportedExtensions)) && !$limitNotReached;
     }
 
     /**
