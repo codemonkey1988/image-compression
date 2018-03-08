@@ -14,63 +14,66 @@ namespace Codemonkey1988\ImageCompression\Tests\Unit\Compressor;
  */
 
 use Codemonkey1988\ImageCompression\Compressor\TinifyCompressor;
+use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TinifyCompressorTest extends UnitTestCase
 {
     /**
+     * @var ConfigurationService
+     */
+    protected $mockedConfigurationService;
+
+    /**
+     * @throws \PHPUnit\Framework\Exception
+     */
+    protected function setUp()
+    {
+        parent::setUp();
+
+        $this->mockedConfigurationService = $this->getAccessibleMock(
+            ConfigurationService::class,
+            ['getTinifySupportedExtensions', 'getTinifyMaxMonthlyCompressionCount', 'getTinifyApiKey']
+        );
+        $this->mockedConfigurationService->method('getTinifyApiKey')->willReturn('mytestapikey');
+        $this->mockedConfigurationService->method('getTinifyMaxMonthlyCompressionCount')->willReturn(500);
+        $this->mockedConfigurationService->method('getTinifySupportedExtensions')->willReturn(['jpg', 'jpeg', 'png']);
+    }
+
+
+    /**
      * Tests if a file can be compressed.
      *
      * @test
+     * @throws \PHPUnit\Framework\Exception
      */
     public function testIfFileCanCompressed()
     {
         $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('jpg');
 
-        $mockedTinifyCompressor = $this->getMockedTinifyCompressor();
+        $tinifyCompressor = GeneralUtility::makeInstance(TinifyCompressor::class);
+        $tinifyCompressor->injectConfigurationService($this->mockedConfigurationService);
 
-        $this->assertTrue($mockedTinifyCompressor->_callRef('canCompress', $fileMock));
+        $this->assertTrue($tinifyCompressor->canCompress($fileMock));
     }
 
     /**
      * Tests if a file can not be compressed because of wrong file extension.
      *
      * @test
+     * @throws \PHPUnit\Framework\Exception
      */
     public function testIfFileCannotCompressedWrongExtension()
     {
         $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('gif');
 
-        $mockedTinifyCompressor = $this->getMockedTinifyCompressor();
+        $tinifyCompressor = GeneralUtility::makeInstance(TinifyCompressor::class);
+        $tinifyCompressor->injectConfigurationService($this->mockedConfigurationService);
 
-        $this->assertFalse($mockedTinifyCompressor->_callRef('canCompress', $fileMock));
-    }
-
-    /**
-     * Tests if a file can not be compressed because the maximum file size exceeded.
-     *
-     * @test
-     */
-    public function testIfFileCannotCompressedExceededCount()
-    {
-        $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
-        $fileMock->expects($this->once())->method('getExtension')->willReturn('jpg');
-
-        $mockedTinifyCompressor = $this->getMockedTinifyCompressor();
-
-        $this->assertFalse($mockedTinifyCompressor->_callRef('canCompress', $fileMock));
-    }
-
-    protected function getMockedTinifyCompressor()
-    {
-        $mockedTinifyCompressor = $this->getAccessibleMock(TinifyCompressor::class, ['getApiKey', 'getCompressionCount', 'getSupportedExtensions']);
-        $mockedTinifyCompressor->expects($this->once())->method('getApiKey')->willReturn('mytestapikey');
-        $mockedTinifyCompressor->expects($this->any())->method('getCompressionCount')->willReturn(500);
-        $mockedTinifyCompressor->expects($this->once())->method('getSupportedExtensions')->willReturn(['jpg', 'jpeg', 'png']);
-
-        return $mockedTinifyCompressor;
+        $this->assertFalse($tinifyCompressor->canCompress($fileMock));
     }
 }
