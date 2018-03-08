@@ -13,9 +13,8 @@ namespace Codemonkey1988\ImageCompression\Compressor;
  *
  */
 
+use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\FileInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**
  * Class CompressionService
@@ -25,22 +24,17 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 class TinifyCompressor implements CompressorInterface
 {
     /**
-     * @var \TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility
+     * @var ConfigurationService
      */
-    protected $configurationUtility;
-    /**
-     * @var array
-     */
-    protected $configuration;
+    protected $configurationService;
 
     /**
-     * @param ConfigurationUtility $configurationUtility
+     * @param ConfigurationService $configurationService
      * @return void
      */
-    public function injectConfigurationUtility(\TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility)
+    public function injectConfigurationService(ConfigurationService $configurationService)
     {
-        $this->configurationUtility = $configurationUtility;
-        $this->configuration = $this->configurationUtility->getCurrentConfiguration('image_compression');
+        $this->configurationService = $configurationService;
     }
 
     /**
@@ -66,11 +60,15 @@ class TinifyCompressor implements CompressorInterface
      */
     public function canCompress(FileInterface $file)
     {
+        $apiKey = $this->configurationService->getTinifyApiKey();
+        $supportedExtensions = $this->configurationService->getTinifySupportedExtensions();
+        $currentCompressed = $this->configurationService->getTinifyMaxMonthlyCompressionCount();
+
         $from = new \DateTime('first day of this month 00:00:01');
         $to = new \DateTime('last day of this month 23:59:59');
         $limitNotReached = false;
 
-        return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitNotReached;
+        return !empty($apiKey) && (in_array($file->getExtension(), $supportedExtensions)) && $limitNotReached;
     }
 
     /**
@@ -88,41 +86,5 @@ class TinifyCompressor implements CompressorInterface
         } catch (\Exception $e) {
             return false;
         }
-    }
-
-    /**
-     * @return string
-     */
-    protected function getApiKey()
-    {
-        if (is_array($this->configuration) && isset($this->configuration['tinifyApiKey']['value'])) {
-            return $this->configuration['tinifyApiKey']['value'];
-        }
-
-        return '';
-    }
-
-    /**
-     * @return int
-     */
-    protected function getCompressionCount()
-    {
-        if (is_array($this->configuration) && isset($this->configuration['tinifyCompressionCount']['value'])) {
-            return (int)$this->configuration['tinifyCompressionCount']['value'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSupportedExtensions()
-    {
-        if (is_array($this->configuration) && isset($this->configuration['tinifyExtensions']['value'])) {
-            return GeneralUtility::trimExplode(',', $this->configuration['tinifyExtensions']['value']);
-        }
-
-        return [];
     }
 }

@@ -13,9 +13,9 @@ namespace Codemonkey1988\ImageCompression\Signal;
  *
  */
 
+use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**
  * Class ResourceStorageSignal
@@ -29,9 +29,9 @@ class ResourceStorageSignal
      */
     protected $compressionService;
     /**
-     * @var \TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility
+     * @var ConfigurationService
      */
-    protected $configurationUtility;
+    protected $configurationService;
 
     /**
      * @param \Codemonkey1988\ImageCompression\Service\CompressionService $compressionService
@@ -43,12 +43,12 @@ class ResourceStorageSignal
     }
 
     /**
-     * @param ConfigurationUtility $configurationUtility
+     * @param ConfigurationService $configurationService
      * @return void
      */
-    public function injectConfigurationUtility(\TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility)
+    public function injectConfigurationService(ConfigurationService $configurationService)
     {
-        $this->configurationUtility = $configurationUtility;
+        $this->configurationService = $configurationService;
     }
 
     /**
@@ -60,7 +60,7 @@ class ResourceStorageSignal
      */
     public function postFileAdd(File $file, Folder $folder)
     {
-        if ($this->compressOnUploadEnabled()) {
+        if ($this->configurationService->isCompressOnUploadEnabled()) {
             try {
                 $this->compressionService->compress($file);
             } catch (\Exception $e) {
@@ -77,25 +77,11 @@ class ResourceStorageSignal
      */
     public function postFileReplace(File $file, $tmpName)
     {
-        if ($this->compressOnUploadEnabled()) {
+        if ($this->configurationService->isCompressOnUploadEnabled()) {
             try {
                 $this->compressionService->compress($file);
             } catch (\Exception $e) {
             }
         }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function compressOnUploadEnabled()
-    {
-        $configuration = $this->configurationUtility->getCurrentConfiguration('image_compression');
-
-        if (isset($configuration['enableCompressOnUpload']['value'])) {
-            return (int)$configuration['enableCompressOnUpload']['value'] === 1;
-        }
-
-        return false;
     }
 }

@@ -19,6 +19,7 @@ use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
@@ -28,7 +29,7 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
  *
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
-class CompressionService
+class CompressionService implements SingletonInterface
 {
     /**
      * All available compressors.
