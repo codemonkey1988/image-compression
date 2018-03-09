@@ -24,13 +24,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 interface CompressorInterface extends SingletonInterface
 {
     /**
-     * Should return a unique name for this compressor.
-     *
-     * @return string
-     */
-    public function getName();
-
-    /**
      * This method should return true, if this processor can compress the given file.
      *
      * @param FileInterface $file

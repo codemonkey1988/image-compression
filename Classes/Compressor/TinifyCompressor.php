@@ -47,14 +47,6 @@ class TinifyCompressor implements CompressorInterface
     }
 
     /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'tinify';
-    }
-
-    /**
      * @param FileInterface $file
      * @return bool
      */
