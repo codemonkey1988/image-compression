@@ -42,7 +42,7 @@ class TinifyCompressor implements CompressorInterface
      */
     public function initializeObject()
     {
-        \Tinify\setKey($this->getApiKey());
+        \Tinify\setKey($this->configurationService->getTinifyApiKey());
         \Tinify\setAppIdentifier('t3_image_compression');
     }
 
@@ -62,13 +62,10 @@ class TinifyCompressor implements CompressorInterface
     {
         $apiKey = $this->configurationService->getTinifyApiKey();
         $supportedExtensions = $this->configurationService->getTinifySupportedExtensions();
-        $currentCompressed = $this->configurationService->getTinifyMaxMonthlyCompressionCount();
+        $maxCompressed = $this->configurationService->getTinifyMaxMonthlyCompressionCount();
+        $currentCompressed = $this->getCurrentCompressionCount();
 
-        $from = new \DateTime('first day of this month 00:00:01');
-        $to = new \DateTime('last day of this month 23:59:59');
-        $limitNotReached = false;
-
-        return !empty($apiKey) && (in_array($file->getExtension(), $supportedExtensions)) && !$limitNotReached;
+        return !empty($apiKey) && (in_array($file->getExtension(), $supportedExtensions)) && $currentCompressed < $maxCompressed;
     }
 
     /**
@@ -86,5 +83,13 @@ class TinifyCompressor implements CompressorInterface
         } catch (\Exception $e) {
             return false;
         }
+    }
+
+    /**
+     * @return int
+     */
+    protected function getCurrentCompressionCount(): int
+    {
+        return (int)\Tinify\getCompressionCount();
     }
 }

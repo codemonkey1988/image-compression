@@ -54,10 +54,11 @@ class TinifyCompressorTest extends UnitTestCase
         $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('jpg');
 
-        $tinifyCompressor = GeneralUtility::makeInstance(TinifyCompressor::class);
-        $tinifyCompressor->injectConfigurationService($this->mockedConfigurationService);
+        $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['getCurrentCompressionCount']);
+        $tinifyCompressorMock->injectConfigurationService($this->mockedConfigurationService);
+        $tinifyCompressorMock->method('getCurrentCompressionCount')->willReturn(0);
 
-        $this->assertTrue($tinifyCompressor->canCompress($fileMock));
+        $this->assertTrue($tinifyCompressorMock->canCompress($fileMock));
     }
 
     /**
@@ -71,9 +72,28 @@ class TinifyCompressorTest extends UnitTestCase
         $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('gif');
 
-        $tinifyCompressor = GeneralUtility::makeInstance(TinifyCompressor::class);
-        $tinifyCompressor->injectConfigurationService($this->mockedConfigurationService);
+        $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['getCurrentCompressionCount']);
+        $tinifyCompressorMock->injectConfigurationService($this->mockedConfigurationService);
+        $tinifyCompressorMock->method('getCurrentCompressionCount')->willReturn(0);
 
-        $this->assertFalse($tinifyCompressor->canCompress($fileMock));
+        $this->assertFalse($tinifyCompressorMock->canCompress($fileMock));
+    }
+
+    /**
+     * Tests if a file can not be compressed because of too many compressions.
+     *
+     * @test
+     * @throws \PHPUnit\Framework\Exception
+     */
+    public function testIfFileCannotCompressedMaxCompressionsExceeded()
+    {
+        $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
+        $fileMock->expects($this->once())->method('getExtension')->willReturn('jpg');
+
+        $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['getCurrentCompressionCount']);
+        $tinifyCompressorMock->injectConfigurationService($this->mockedConfigurationService);
+        $tinifyCompressorMock->method('getCurrentCompressionCount')->willReturn(9999);
+
+        $this->assertFalse($tinifyCompressorMock->canCompress($fileMock));
     }
 }
