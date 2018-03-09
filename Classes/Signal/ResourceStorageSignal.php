@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Signal;
 
 /*
@@ -13,6 +14,7 @@ namespace Codemonkey1988\ImageCompression\Signal;
  *
  */
 
+use Codemonkey1988\ImageCompression\Service\CompressionService;
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
@@ -25,7 +27,7 @@ use TYPO3\CMS\Core\Resource\Folder;
 class ResourceStorageSignal
 {
     /**
-     * @var \Codemonkey1988\ImageCompression\Service\CompressionService
+     * @var CompressionService
      */
     protected $compressionService;
     /**
@@ -34,10 +36,10 @@ class ResourceStorageSignal
     protected $configurationService;
 
     /**
-     * @param \Codemonkey1988\ImageCompression\Service\CompressionService $compressionService
+     * @param CompressionService $compressionService
      * @return void
      */
-    public function injectCompressionService(\Codemonkey1988\ImageCompression\Service\CompressionService $compressionService)
+    public function injectCompressionService(CompressionService $compressionService)
     {
         $this->compressionService = $compressionService;
     }
@@ -75,7 +77,7 @@ class ResourceStorageSignal
      * @param string $tmpName
      * @return void
      */
-    public function postFileReplace(File $file, $tmpName)
+    public function postFileReplace(File $file, string $tmpName)
     {
         if ($this->configurationService->isCompressOnUploadEnabled()) {
             try {

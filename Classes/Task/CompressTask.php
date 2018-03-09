@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Task;
 
 /*
@@ -54,7 +55,7 @@ class CompressTask extends AbstractTask
      *
      * @return bool
      */
-    public function execute()
+    public function execute(): bool
     {
         $this->filesPerRun = (int)$this->files_per_run;
 

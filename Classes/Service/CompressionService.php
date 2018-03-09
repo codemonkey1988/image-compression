@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Service;
 
 /*
@@ -179,7 +180,7 @@ class CompressionService implements SingletonInterface
     /**
      * @return array
      */
-    protected function getSupportedExtensions()
+    protected function getSupportedExtensions(): array
     {
         if (is_array($this->extensionConfiguration) && isset($this->extensionConfiguration['tinifyExtensions']['value'])) {
             return GeneralUtility::trimExplode(',', $this->extensionConfiguration['tinifyExtensions']['value']);

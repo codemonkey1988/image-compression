@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Resource;
 
 /*
@@ -31,7 +32,7 @@ class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepo
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findUnCompressedImages(array $fileExtensions, $limit = 0)
+    public function findUnCompressedImages(array $fileExtensions, $limit = 0): array
     {
         $fileObjecs = [];
 

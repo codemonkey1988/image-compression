@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Resource;
 
 /*
@@ -32,7 +33,7 @@ class FileRepository extends BaseFileRepository
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findUncompressedImages(array $fileExtensions, $limit = 0)
+    public function findUncompressedImages(array $fileExtensions, $limit = 0): array
     {
         $fileObjecs = [];
 

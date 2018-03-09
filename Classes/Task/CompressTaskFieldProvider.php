@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Task;
 
 /*
@@ -46,7 +47,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param SchedulerModuleController $schedulerModule
      * @return array
      */
-    public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule)
+    public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule): array
     {
         $this->taskInfo = &$taskInfo;
         $this->task = $task;
@@ -68,7 +69,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param SchedulerModuleController $schedulerModule
      * @return bool
      */
-    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule)
+    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule): bool
     {
         if (!is_numeric($submittedData['files_per_run'])) {
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('Value has to be numeric'), FlashMessage::ERROR);
@@ -98,7 +99,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param string $fieldId
      * @return array
      */
-    protected function generateFieldPerRunField($fieldId)
+    protected function generateFieldPerRunField(string $fieldId): array
     {
         if (!isset($taskInfo['files_per_run'])) {
             $taskInfo['files_per_run'] = '25';
@@ -122,7 +123,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param string $fieldId
      * @return array
      */
-    protected function generateCompressOriginalField($fieldId)
+    protected function generateCompressOriginalField(string $fieldId): array
     {
         if (!isset($taskInfo['compress_original'])) {
             $taskInfo['compress_original'] = '1';
@@ -152,7 +153,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param string $fieldId
      * @return array
      */
-    protected function generateCompressProcessedField($fieldId)
+    protected function generateCompressProcessedField(string $fieldId): array
     {
         if (!isset($taskInfo['compress_processed'])) {
             $taskInfo['compress_processed'] = '1';
