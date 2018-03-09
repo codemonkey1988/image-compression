@@ -32,7 +32,7 @@ class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepo
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findUnCompressedImages(array $fileExtensions, $limit = 0): array
+    public function findUnCompressedImages($limit = 0): array
     {
         $fileObjecs = [];
 
@@ -54,12 +54,12 @@ class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepo
                     $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
+                    'sys_file_processedfile.image_compression_last_checked',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
                     'sys_file_processedfile.task_type',
                     $queryBuilder->createNamedParameter('Image.CropScaleMask', Connection::PARAM_STR)
-                ),
-                $queryBuilder->expr()->in(
-                    'sys_file.extension',
-                    $queryBuilder->createNamedParameter($fileExtensions, Connection::PARAM_STR_ARRAY)
                 )
             )
             ->orderBy('uid', 'ASC');

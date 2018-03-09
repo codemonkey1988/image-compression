@@ -23,7 +23,6 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**
  * Class CompressionService
@@ -40,11 +39,6 @@ class CompressionService implements SingletonInterface
     protected $compressors = [];
 
     /**
-     * @var ConfigurationUtility
-     */
-    protected $configurationUtility;
-
-    /**
      * @var FileRepository
      */
     protected $fileRepository;
@@ -55,11 +49,6 @@ class CompressionService implements SingletonInterface
     protected $processedFileRepository;
 
     /**
-     * @var array
-     */
-    protected $extensionConfiguration;
-
-    /**
      * CompressionService constructor.
      */
     public function __construct()
@@ -67,15 +56,6 @@ class CompressionService implements SingletonInterface
         if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'])) {
             $this->compressors = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'];
         }
-    }
-
-    /**
-     * @param ConfigurationUtility $configurationUtility
-     */
-    public function injectConfigurationUtility(ConfigurationUtility $configurationUtility)
-    {
-        $this->configurationUtility = $configurationUtility;
-        $this->extensionConfiguration = $this->configurationUtility->getCurrentConfiguration('image_compression');
     }
 
     /**
@@ -115,7 +95,7 @@ class CompressionService implements SingletonInterface
      */
     public function getUncompressedOriginalFiles(int $limit): array
     {
-        return $this->fileRepository->findUncompressedImages($this->getSupportedExtensions(), $limit);
+        return $this->fileRepository->findUncompressedImages($limit);
     }
 
     /**
@@ -124,7 +104,7 @@ class CompressionService implements SingletonInterface
      */
     public function getUncompressedProcessedFiles(int $limit): array
     {
-        return $this->processedFileRepository->findUncompressedImages($this->getSupportedExtensions(), $limit);
+        return $this->processedFileRepository->findUncompressedImages($limit);
     }
 
     /**
@@ -175,17 +155,5 @@ class CompressionService implements SingletonInterface
             )
             ->set('image_compression_last_compressed', $now->getTimestamp())
             ->execute();
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSupportedExtensions(): array
-    {
-        if (is_array($this->extensionConfiguration) && isset($this->extensionConfiguration['tinifyExtensions']['value'])) {
-            return GeneralUtility::trimExplode(',', $this->extensionConfiguration['tinifyExtensions']['value']);
-        }
-
-        return [];
     }
 }
