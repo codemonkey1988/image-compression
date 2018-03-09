@@ -24,4 +24,14 @@ declare(strict_types=1);
             'eval' => 'datetime',
         ],
     ],
+    'image_compression_last_checked' => [
+        'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_db.xlf:sys_file.image_compression_last_checked',
+        'exclude' => 1,
+        'config' => [
+            'type' => 'input',
+            'renderType' => 'inputDateTime',
+            'dbType' => 'datetime',
+            'eval' => 'datetime',
+        ],
+    ]
 ]);
