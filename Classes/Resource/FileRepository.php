@@ -49,12 +49,6 @@ class FileRepository extends BaseFileRepository
                 'metadata',
                 $queryBuilder->expr()->eq('metadata.file', $queryBuilder->quoteIdentifier('sys_file.uid'))
             )
-            ->join(
-                'sys_file',
-                'sys_file_storage',
-                'storage',
-                $queryBuilder->expr()->eq('sys_file.storage', $queryBuilder->quoteIdentifier('storage.uid'))
-            )
             ->where(
                 $queryBuilder->expr()->eq(
                     'metadata.image_compression_last_compressed',
@@ -63,10 +57,6 @@ class FileRepository extends BaseFileRepository
                 $queryBuilder->expr()->in(
                     'sys_file.extension',
                     $queryBuilder->createNamedParameter($fileExtensions, Connection::PARAM_STR_ARRAY)
-                ),
-                $queryBuilder->expr()->eq(
-                    'storage.driver',
-                    $queryBuilder->createNamedParameter('Local', Connection::PARAM_STR)
                 )
             )
             ->orderBy('sys_file.uid', 'ASC');

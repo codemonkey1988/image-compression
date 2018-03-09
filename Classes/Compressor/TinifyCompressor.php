@@ -57,8 +57,12 @@ class TinifyCompressor implements CompressorInterface
         $supportedExtensions = $this->configurationService->getTinifySupportedExtensions();
         $maxCompressed = $this->configurationService->getTinifyMaxMonthlyCompressionCount();
         $currentCompressed = $this->getCurrentCompressionCount();
+        $storage = $file->getStorage();
 
-        return !empty($apiKey) && (in_array($file->getExtension(), $supportedExtensions)) && $currentCompressed < $maxCompressed;
+        return !empty($apiKey)
+            && (in_array($file->getExtension(), $supportedExtensions))
+            && $currentCompressed < $maxCompressed
+            && $storage->getDriverType() === 'Local';
     }
 
     /**
