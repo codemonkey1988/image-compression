@@ -47,6 +47,12 @@ class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepo
                 'sys_file',
                 $queryBuilder->expr()->eq('sys_file_processedfile.original', $queryBuilder->quoteIdentifier('sys_file.uid'))
             )
+            ->join(
+                'sys_file_processedfile',
+                'sys_file_storage',
+                'storage',
+                $queryBuilder->expr()->eq('sys_file_processedfile.storage', $queryBuilder->quoteIdentifier('storage.uid'))
+            )
             ->where(
                 $queryBuilder->expr()->eq(
                     'sys_file_processedfile.image_compression_last_compressed',
@@ -59,6 +65,10 @@ class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepo
                 $queryBuilder->expr()->in(
                     'sys_file.extension',
                     $queryBuilder->createNamedParameter($fileExtensions, Connection::PARAM_STR_ARRAY)
+                ),
+                $queryBuilder->expr()->eq(
+                    'storage.driver',
+                    $queryBuilder->createNamedParameter('Local', Connection::PARAM_STR)
                 )
             )
             ->orderBy('uid', 'ASC');
