@@ -1,15 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xliff version="1.0">
-	<file source-language="en" product-name="image_compression">
-		<header/>
-		<body>
-			<trans-unit id="sys_file.image_compression_last_compressed">
-				<source>Last compressed</source>
-			</trans-unit>
+    <file source-language="en" product-name="image_compression">
+        <header/>
+        <body>
+            <trans-unit id="sys_file.image_compression_last_compressed">
+                <source>Compression last compressed</source>
+            </trans-unit>
+            <trans-unit id="sys_file.image_compression_last_checked">
+                <source>Compression last checked</source>
+            </trans-unit>
 
-			<trans-unit id="sys_file_processedfile.image_compression_last_compressed">
-				<source>Last compressed</source>
-			</trans-unit>
-		</body>
-	</file>
+            <trans-unit id="sys_file_processedfile.image_compression_last_compressed">
+                <source>Compression last compressed</source>
+            </trans-unit>
+            <trans-unit id="sys_file_processedfile.image_compression_last_checked">
+                <source>Compression last checked</source>
+            </trans-unit>
+        </body>
+    </file>
 </xliff>
