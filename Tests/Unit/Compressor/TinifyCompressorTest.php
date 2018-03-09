@@ -17,7 +17,10 @@ namespace Codemonkey1988\ImageCompression\Tests\Unit\Compressor;
 use Codemonkey1988\ImageCompression\Compressor\TinifyCompressor;
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
+use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\File;
+use TYPO3\CMS\Core\Resource\ResourceStorage;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TinifyCompressorTest extends UnitTestCase
 {
@@ -50,7 +53,12 @@ class TinifyCompressorTest extends UnitTestCase
      */
     public function testIfFileCanCompressed()
     {
+        $storageMock = $this->getAccessibleMock(ResourceStorage::class, ['getUid', 'getDriverType'], [], '', false);
+        $storageMock->expects($this->once())->method('getDriverType')->willReturn('Local');
+        $storageMock->expects($this->once())->method('getUid')->willReturn(1);
+
         $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
+        $fileMock->setStorage($storageMock);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('jpg');
 
         $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['getCurrentCompressionCount']);
@@ -68,12 +76,17 @@ class TinifyCompressorTest extends UnitTestCase
      */
     public function testIfFileCannotCompressedWrongExtension()
     {
+        $storageMock = $this->getAccessibleMock(ResourceStorage::class, ['getUid', 'getDriverType'], [], '', false);
+        $storageMock->expects($this->never())->method('getDriverType')->willReturn('Local');
+        $storageMock->expects($this->once())->method('getUid')->willReturn(1);
+
         $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
+        $fileMock->setStorage($storageMock);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('gif');
 
         $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['getCurrentCompressionCount']);
         $tinifyCompressorMock->injectConfigurationService($this->mockedConfigurationService);
-        $tinifyCompressorMock->method('getCurrentCompressionCount')->willReturn(0);
+        $tinifyCompressorMock->expects($this->once())->method('getCurrentCompressionCount')->willReturn(0);
 
         $this->assertFalse($tinifyCompressorMock->canCompress($fileMock));
     }
@@ -86,12 +99,17 @@ class TinifyCompressorTest extends UnitTestCase
      */
     public function testIfFileCannotCompressedMaxCompressionsExceeded()
     {
-        $fileMock = $this->getAccessibleMock(File::class, ['getExtension'], [], '', false);
+        $storageMock = $this->getAccessibleMock(ResourceStorage::class, ['getUid', 'getDriverType'], [], '', false);
+        $storageMock->expects($this->never())->method('getDriverType')->willReturn('Local');
+        $storageMock->expects($this->once())->method('getUid')->willReturn(1);
+
+        $fileMock = $this->getAccessibleMock(File::class, ['getExtension', 'getStorage'], [], '', false);
+        $fileMock->setStorage($storageMock);
         $fileMock->expects($this->once())->method('getExtension')->willReturn('jpg');
 
         $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['getCurrentCompressionCount']);
         $tinifyCompressorMock->injectConfigurationService($this->mockedConfigurationService);
-        $tinifyCompressorMock->method('getCurrentCompressionCount')->willReturn(9999);
+        $tinifyCompressorMock->expects($this->once())->method('getCurrentCompressionCount')->willReturn(9999);
 
         $this->assertFalse($tinifyCompressorMock->canCompress($fileMock));
     }
