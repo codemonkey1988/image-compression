@@ -87,6 +87,9 @@ class CompressionService implements SingletonInterface
         if ($compressor !== null && $compressor->compress($file) === true) {
             $this->updateCompressionStatus($file);
         }
+
+        // Mark file as "processed"
+        $this->updateCheckedStatus($file);
     }
 
     /**
@@ -154,6 +157,30 @@ class CompressionService implements SingletonInterface
                 $queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
             )
             ->set('image_compression_last_compressed', $now->getTimestamp())
+            ->execute();
+    }
+
+    /**
+     * Update the checked status.
+     *
+     * @param FileInterface $file
+     * @return void
+     */
+    protected function updateCheckedStatus(FileInterface $file)
+    {
+        $now = new \DateTime();
+        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
+        $field = ($file instanceof File) ? 'file' : 'uid';
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table);
+
+        $queryBuilder
+            ->update($table)
+            ->where(
+                $queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
+            )
+            ->set('image_compression_last_checked', $now->getTimestamp())
             ->execute();
     }
 }
