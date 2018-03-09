@@ -100,25 +100,4 @@
         <creation_date>1519927538</creation_date>
         <modification_date>1519927537</modification_date>
     </sys_file>
-    <!-- For external storage -->
-    <sys_file>
-        <uid>6</uid>
-        <pid>0</pid>
-        <tstamp>1519927538</tstamp>
-        <last_indexed>1519927538</last_indexed>
-        <missing>0</missing>
-        <storage>2</storage>
-        <type>2</type>
-        <metadata>0</metadata>
-        <identifier>/400x250.jpg</identifier>
-        <identifier_hash>d6d06b3d362bd1e9448b38e1c2a5bc28f41521eb</identifier_hash>
-        <folder_hash>42099b4af021e53fd8fd4e056c2568d7c2e3ffa8</folder_hash>
-        <extension>jpg</extension>
-        <mime_type>image/jpeg</mime_type>
-        <name>400x250.jpg</name>
-        <sha1>a197252814f34d8e2df6f02cd7b0c2fa23a92d90</sha1>
-        <size>30552</size>
-        <creation_date>1519927538</creation_date>
-        <modification_date>1519927537</modification_date>
-    </sys_file>
 </dataset>

@@ -85,22 +85,4 @@
         <alternative/>
         <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_metadata>
-    <!-- for external storage -->
-    <sys_file_metadata>
-        <uid>6</uid>
-        <pid>0</pid>
-        <tstamp>1519927538</tstamp>
-        <crdate>1519927538</crdate>
-        <cruser_id>1</cruser_id>
-        <sys_language_uid>0</sys_language_uid>
-        <l10n_parent>0</l10n_parent>
-        <l10n_diffsource/>
-        <file>6</file>
-        <title/>
-        <width>400</width>
-        <height>250</height>
-        <description/>
-        <alternative/>
-        <image_compression_last_compressed>0</image_compression_last_compressed>
-    </sys_file_metadata>
 </dataset>
