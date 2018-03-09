@@ -17,7 +17,6 @@ use Codemonkey1988\ImageCompression\Compressor\TinifyCompressor;
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TinifyCompressorTest extends UnitTestCase
 {
@@ -41,7 +40,6 @@ class TinifyCompressorTest extends UnitTestCase
         $this->mockedConfigurationService->method('getTinifyMaxMonthlyCompressionCount')->willReturn(500);
         $this->mockedConfigurationService->method('getTinifySupportedExtensions')->willReturn(['jpg', 'jpeg', 'png']);
     }
-
 
     /**
      * Tests if a file can be compressed.

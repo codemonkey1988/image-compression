@@ -56,7 +56,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
         // Default Tinify config
         $this->assertEmpty($configurationService->getTinifyApiKey());
         $this->assertEquals(500, $configurationService->getTinifyMaxMonthlyCompressionCount());
-        $this->assertEquals(['png','jpg','jpeg'], $configurationService->getTinifySupportedExtensions());
+        $this->assertEquals(['png', 'jpg', 'jpeg'], $configurationService->getTinifySupportedExtensions());
     }
 
     /**
@@ -70,7 +70,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
             'enableCompressOnUpload' => '1',
             'tinifyApiKey' => 'MyApiKey',
             'tinifyCompressionCount' => '600',
-            'tinifyExtensions' => 'tiff,gif'
+            'tinifyExtensions' => 'tiff,gif',
         ]);
 
         $configurationService = $this->objectManager->get(ConfigurationService::class);
@@ -80,6 +80,6 @@ class ConfigurationServiceTest extends FunctionalTestCase
         // Default Tinify config
         $this->assertEquals('MyApiKey', $configurationService->getTinifyApiKey());
         $this->assertEquals(600, $configurationService->getTinifyMaxMonthlyCompressionCount());
-        $this->assertEquals(['tiff','gif'], $configurationService->getTinifySupportedExtensions());
+        $this->assertEquals(['tiff', 'gif'], $configurationService->getTinifySupportedExtensions());
     }
 }

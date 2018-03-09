@@ -14,7 +14,6 @@ namespace Codemonkey1988\ImageCompression\Task;
  */
 
 use Codemonkey1988\ImageCompression\Service\CompressionService;
-use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
