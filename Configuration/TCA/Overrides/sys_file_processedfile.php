@@ -33,5 +33,5 @@ declare(strict_types=1);
             'dbType' => 'datetime',
             'eval' => 'datetime',
         ],
-    ]
+    ],
 ]);

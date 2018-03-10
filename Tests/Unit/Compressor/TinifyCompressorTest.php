@@ -17,10 +17,8 @@ namespace Codemonkey1988\ImageCompression\Tests\Unit\Compressor;
 use Codemonkey1988\ImageCompression\Compressor\TinifyCompressor;
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\UnitTestCase;
-use TYPO3\CMS\Core\Resource\Driver\LocalDriver;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\ResourceStorage;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 class TinifyCompressorTest extends UnitTestCase
 {
