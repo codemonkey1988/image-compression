@@ -76,7 +76,7 @@ class TinifyCompressor implements CompressorInterface
     public function compress(FileInterface $file)
     {
         try {
-            $publicUrl = PATH_site . $file->getPublicUrl();
+            $publicUrl = $file->getForLocalProcessing(false);
             $sourceFile = \Tinify\fromFile($publicUrl);
             $sourceFile->toFile($publicUrl);
 
