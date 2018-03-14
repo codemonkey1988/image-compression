@@ -105,7 +105,7 @@ class CompressTask extends AbstractTask
     {
         $supportedExtension = GeneralUtility::trimExplode(',', $this->supportedExtensions);
 
-        if ($this->remainingFiles <= 0 || !$this->compressProcessed ||empty($supportedExtension)) {
+        if ($this->remainingFiles <= 0 || !$this->compressProcessed || empty($supportedExtension)) {
             return;
         }
 
