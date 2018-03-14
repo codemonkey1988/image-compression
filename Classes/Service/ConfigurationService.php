@@ -15,7 +15,6 @@ namespace Codemonkey1988\ImageCompression\Service;
  */
 
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**

@@ -15,8 +15,6 @@ namespace Codemonkey1988\ImageCompression\Tests\Functional\Service;
  */
 
 use Codemonkey1988\ImageCompression\Compressor\TinifyCompressor;
-use Codemonkey1988\ImageCompression\Resource\FileRepository;
-use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use Codemonkey1988\ImageCompression\Service\CompressionService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;

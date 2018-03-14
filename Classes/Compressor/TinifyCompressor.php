@@ -27,7 +27,7 @@ class TinifyCompressor implements CompressorInterface
     /**
      * @var array
      */
-    protected $supportedExtensions = ['png','jpg','jpeg'];
+    protected $supportedExtensions = ['png', 'jpg', 'jpeg'];
 
     /**
      * @var ConfigurationService
