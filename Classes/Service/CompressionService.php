@@ -18,8 +18,8 @@ use Codemonkey1988\ImageCompression\Compressor\CompressorInterface;
 use Codemonkey1988\ImageCompression\Resource\FileRepository;
 use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\AbstractFile;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
@@ -77,15 +77,16 @@ class CompressionService implements SingletonInterface
     /**
      * Compress an image file.
      *
-     * @param FileInterface $file
+     * @param AbstractFile $file
      * @return void
      */
-    public function compress(FileInterface $file)
+    public function compress(AbstractFile $file)
     {
         $compressor = $this->getFirstMatchingCompressor($file);
 
         if ($compressor !== null && $compressor->compress($file) === true) {
             $this->updateCompressionStatus($file);
+            $this->updatePostProcess($file);
         }
 
         // Mark file as "processed"
@@ -115,10 +116,10 @@ class CompressionService implements SingletonInterface
     /**
      * Find the first compressor that can compress the given file.
      *
-     * @param FileInterface $file
+     * @param AbstractFile $file
      * @return CompressorInterface|null
      */
-    protected function getFirstMatchingCompressor(FileInterface $file)
+    protected function getFirstMatchingCompressor(AbstractFile $file)
     {
         $imageCompressor = null;
         /** @var ObjectManager $objectManager */
@@ -141,10 +142,10 @@ class CompressionService implements SingletonInterface
     /**
      * Update the compression status.
      *
-     * @param FileInterface $file
+     * @param AbstractFile $file
      * @return void
      */
-    protected function updateCompressionStatus(FileInterface $file)
+    protected function updateCompressionStatus(AbstractFile $file)
     {
         $now = new \DateTime();
         $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
@@ -166,10 +167,10 @@ class CompressionService implements SingletonInterface
     /**
      * Update the checked status.
      *
-     * @param FileInterface $file
+     * @param AbstractFile $file
      * @return void
      */
-    protected function updateCheckedStatus(FileInterface $file)
+    protected function updateCheckedStatus(AbstractFile $file)
     {
         $now = new \DateTime();
         $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
@@ -184,6 +185,35 @@ class CompressionService implements SingletonInterface
                 $queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
             )
             ->set('image_compression_last_checked', $now->getTimestamp())
+            ->execute();
+    }
+
+    /**
+     * Updates necessary database fields after successful image compression.
+     *
+     * @param AbstractFile $file
+     * @return void
+     */
+    protected function updatePostProcess(AbstractFile $file)
+    {
+        // There are only database updates, when the original file is compressed.
+        if (($file instanceof File) === false) {
+            return;
+        }
+
+        $size = filesize($file->getForLocalProcessing(false));
+
+        // Update sys_file table. Fields: size
+        // Do not update modification time, because it makes all processed images from this image invalid. (See checksum generation)
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('sys_file');
+
+        $queryBuilder
+            ->update('sys_file')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
+            )
+            ->set('size', $size)
             ->execute();
     }
 }
