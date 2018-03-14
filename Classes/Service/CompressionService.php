@@ -159,6 +159,7 @@ class CompressionService implements SingletonInterface
                 $queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
             )
             ->set('image_compression_last_compressed', $now->getTimestamp())
+            ->set('tstamp', $now->getTimestamp())
             ->execute();
     }
 
