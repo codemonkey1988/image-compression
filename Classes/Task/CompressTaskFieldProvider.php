@@ -32,7 +32,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
     protected $taskInfo;
 
     /**
-     * @var \TYPO3\CMS\Scheduler\Task\AbstractTask
+     * @var CompressTask
      */
     protected $task;
 
@@ -71,7 +71,11 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      */
     public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule): bool
     {
-        if (!is_numeric($submittedData['files_per_run'])) {
+        if (empty($submittedData['files_per_run'])) {
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('Please enter a numeric value'), FlashMessage::ERROR);
+
+            return false;
+        } elseif (!is_numeric($submittedData['files_per_run'])) {
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('Value has to be numeric'), FlashMessage::ERROR);
 
             return false;
@@ -90,9 +94,11 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
-        $task->files_per_run = $submittedData['files_per_run'];
-        $task->compress_original = $submittedData['compress_original'];
-        $task->compress_processed = $submittedData['compress_processed'];
+        if ($task instanceof CompressTask) {
+            $task->filesPerRun = (int)$submittedData['files_per_run'];
+            $task->compressOriginal = !empty($submittedData['compress_original']);
+            $task->compressProcessed = !empty($submittedData['compress_processed']);
+        }
     }
 
     /**
@@ -105,11 +111,11 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
             $taskInfo['files_per_run'] = '25';
 
             if ($this->schedulerModule->CMD === 'edit') {
-                $taskInfo['files_per_run'] = $this->task->files_per_run;
+                $taskInfo['files_per_run'] = $this->task->filesPerRun;
             }
         }
 
-        $fieldHtml = '<input type="text" name="tx_scheduler[files_per_run]" id="' . $fieldId . '" value="' . htmlspecialchars($taskInfo['files_per_run']) . '" />';
+        $fieldHtml = '<input type="text" name="tx_scheduler[files_per_run]" id="' . $fieldId . '" value="' . (int)$taskInfo['files_per_run'] . '" />';
 
         return [
             'code' => $fieldHtml,
@@ -129,7 +135,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
             $taskInfo['compress_original'] = '1';
 
             if ($this->schedulerModule->CMD === 'edit') {
-                $taskInfo['compress_original'] = $this->task->compress_original;
+                $taskInfo['compress_original'] = $this->task->compressOriginal;
             }
         }
 
@@ -159,7 +165,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
             $taskInfo['compress_processed'] = '1';
 
             if ($this->schedulerModule->CMD === 'edit') {
-                $taskInfo['compress_processed'] = $this->task->compress_processed;
+                $taskInfo['compress_processed'] = $this->task->compressProcessed;
             }
         }
 

@@ -31,24 +31,27 @@ class CompressTask extends AbstractTask
     /**
      * @var int
      */
-    protected $filesPerRun;
+    public $filesPerRun;
+
+    /**
+     * @var bool
+     */
+    public $compressOriginal;
+
+    /**
+     * @var bool
+     */
+    public $compressProcessed;
+
+    /**
+     * @var int
+     */
+    protected $remainingFiles;
 
     /**
      * @var CompressionService
      */
     protected $compressionService;
-
-    /**
-     * CompressTask constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        /** @vatschreinerr ObjectManager $objectManager */
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->compressionService = $objectManager->get(CompressionService::class);
-    }
 
     /**
      * Executes the task.
@@ -57,7 +60,10 @@ class CompressTask extends AbstractTask
      */
     public function execute(): bool
     {
-        $this->filesPerRun = (int)$this->files_per_run;
+        $this->remainingFiles = $this->filesPerRun;
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->compressionService = $objectManager->get(CompressionService::class);
 
         $this->processOriginalFiles();
         $this->processProcessedFiles();
@@ -70,17 +76,17 @@ class CompressTask extends AbstractTask
      */
     protected function processOriginalFiles()
     {
-        if ($this->filesPerRun <= 0 || empty($this->compress_original)) {
+        if ($this->remainingFiles <= 0 || !$this->compressOriginal) {
             return;
         }
 
-        $files = $this->compressionService->getUncompressedOriginalFiles($this->filesPerRun);
+        $files = $this->compressionService->getUncompressedOriginalFiles($this->remainingFiles);
 
         if ($files) {
             /** @var File $file */
             foreach ($files as $file) {
                 $this->compressionService->compress($file);
-                $this->filesPerRun--;
+                $this->remainingFiles--;
             }
         }
     }
@@ -90,17 +96,17 @@ class CompressTask extends AbstractTask
      */
     protected function processProcessedFiles()
     {
-        if ($this->filesPerRun <= 0 || empty($this->compress_processed)) {
+        if ($this->remainingFiles <= 0 || !$this->compressProcessed) {
             return;
         }
 
-        $files = $this->compressionService->getUncompressedProcessedFiles($this->filesPerRun);
+        $files = $this->compressionService->getUncompressedProcessedFiles($this->remainingFiles);
 
         if ($files) {
             /** @var File $file */
             foreach ($files as $file) {
                 $this->compressionService->compress($file);
-                $this->filesPerRun--;
+                $this->remainingFiles--;
             }
         }
     }
