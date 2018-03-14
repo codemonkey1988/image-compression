@@ -59,7 +59,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         $supportedExtension = 'supported_extensions';
 
         return [
-            $filesPerRunId => $this->generateFieldPerRunField($filesPerRunId),
+            $filesPerRunId => $this->generateFilesPerRunField($filesPerRunId),
             $compressOriginal => $this->generateCompressOriginalField($compressOriginal),
             $compressProcessed => $this->generateCompressProcessedField($compressProcessed),
             $supportedExtension => $this->generateSupportedExtensionsField($supportedExtension),
@@ -114,7 +114,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param string $fieldId
      * @return array
      */
-    protected function generateFieldPerRunField(string $fieldId): array
+    protected function generateFilesPerRunField(string $fieldId): array
     {
         if (!isset($taskInfo['files_per_run'])) {
             $taskInfo['files_per_run'] = '25';
