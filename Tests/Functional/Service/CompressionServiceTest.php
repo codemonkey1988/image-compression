@@ -69,19 +69,19 @@ class CompressionServiceTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
 
-        $fileRepository = $this->objectManager->get(FileRepository::class);
-        $files = $fileRepository->findUncompressedImages(99);
+        /** @var CompressionService $compressionService */
+        $compressionService = $this->objectManager->get(CompressionService::class);
+
+        $files = $compressionService->getUncompressedOriginalFiles(99);
 
         $this->assertEquals(5, count($files), 'There must be exactly 5 images that are not compressed');
 
         // Compress the first image.
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'] = [$this->getCompressorMock()];
 
-        /** @var CompressionService $compressionService */
-        $compressionService = $this->objectManager->get(CompressionService::class);
         $compressionService->compress($files[0]);
 
-        $newFiles = $fileRepository->findUncompressedImages(99);
+        $newFiles = $compressionService->getUncompressedOriginalFiles(99);
         $this->assertEquals(4, count($newFiles), 'There must be exactly 3 images that are not compressed');
     }
 
@@ -98,19 +98,19 @@ class CompressionServiceTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_processedfile.xml');
 
-        $processedFileRepository = $this->objectManager->get(ProcessedFileRepository::class);
-        $files = $processedFileRepository->findUncompressedImages(99);
+        /** @var CompressionService $compressionService */
+        $compressionService = $this->objectManager->get(CompressionService::class);
+
+        $files = $compressionService->getUncompressedProcessedFiles(99);
 
         $this->assertEquals(1, count($files), 'There must be exactly 1 image that is not compressed');
 
         // Compress the first image.
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'] = [$this->getCompressorMock()];
 
-        /** @var CompressionService $compressionService */
-        $compressionService = $this->objectManager->get(CompressionService::class);
         $compressionService->compress($files[0]);
 
-        $newFiles = $processedFileRepository->findUncompressedImages(99);
+        $newFiles = $compressionService->getUncompressedProcessedFiles(99);
         $this->assertEquals(0, count($newFiles), 'There must be noimage that is not compressed');
     }
 
@@ -126,22 +126,21 @@ class CompressionServiceTest extends FunctionalTestCase
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
 
-        $processedFileRepository = $this->objectManager->get(FileRepository::class);
-        $files = $processedFileRepository->findUncompressedImages(99);
+        /** @var CompressionService $compressionService */
+        $compressionService = $this->objectManager->get(CompressionService::class);
+
+        $files = $compressionService->getUncompressedOriginalFiles(99);
 
         $this->assertEquals(5, count($files), 'There must be exactly 5 images that are not compressed');
 
         // Compress the first image.
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'] = [$this->getCompressorMock()];
 
-        /** @var CompressionService $compressionService */
-        $compressionService = $this->objectManager->get(CompressionService::class);
-
         foreach ($files as $file) {
             $compressionService->compress($file);
         }
 
-        $newFiles = $processedFileRepository->findUncompressedImages(99);
+        $newFiles = $compressionService->getUncompressedOriginalFiles(99);
         $this->assertEquals(0, count($newFiles), 'There must be no image that is not compressed');
     }
 
