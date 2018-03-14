@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Tests\Functional\Resource;
 
 /*
@@ -57,22 +58,39 @@ class FileRepositoryTest extends FunctionalTestCase
     }
 
     /**
-     * Test if uncompressed images can be determined.
+     * Test if one uncompressed image can be determined.
      *
      * @test
      * @throws \Nimut\TestingFramework\Exception\Exception
      */
-    public function findUncompressedImages()
+    public function findUncompressedImage()
     {
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_storage.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file.xml');
         $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
 
-        $files = $this->fileRepository->findByImageCompressionStatus(0, 1);
+        $files = $this->fileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 1);
 
-        $this->assertTrue(is_array($files) && count($files) === 1, 'There is more or less than one image');
+        $this->assertEquals(1, count($files), 'There is more or less than one image');
         $this->assertEquals(get_class($files[0]), File::class, 'The first entry of $files is not of object type File');
         $this->assertEquals($files[0]->getUid(), 1, 'The first image does not have the uid 1');
+    }
+
+    /**
+     * Test if all uncompressed jpg images can be determined.
+     *
+     * @test
+     * @throws \Nimut\TestingFramework\Exception\Exception
+     */
+    public function findUncompressedJpgImages()
+    {
+        $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_storage.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/sys_file.xml');
+        $this->importDataSet(__DIR__ . '/../Fixtures/sys_file_metadata.xml');
+
+        $files = $this->fileRepository->findUncompressedImages(['jpg'], 99);
+
+        $this->assertEquals(2, count($files), 'There are more or less than two images. Expected 2, actual ' . count($files));
     }
 
     /**
@@ -82,7 +100,7 @@ class FileRepositoryTest extends FunctionalTestCase
      */
     public function findUncompressedImagesNoResult()
     {
-        $files = $this->fileRepository->findByImageCompressionStatus(0, 1);
+        $files = $this->fileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 1);
 
         $this->assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
     }

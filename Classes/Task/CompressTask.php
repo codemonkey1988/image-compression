@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Task;
 
 /*
@@ -13,8 +14,6 @@ namespace Codemonkey1988\ImageCompression\Task;
  *
  */
 
-use Codemonkey1988\ImageCompression\Resource\FileRepository;
-use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use Codemonkey1988\ImageCompression\Service\CompressionService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
@@ -32,7 +31,27 @@ class CompressTask extends AbstractTask
     /**
      * @var int
      */
-    protected $filesPerRun;
+    public $filesPerRun;
+
+    /**
+     * @var bool
+     */
+    public $compressOriginal;
+
+    /**
+     * @var bool
+     */
+    public $compressProcessed;
+
+    /**
+     * @var string
+     */
+    public $supportedExtensions;
+
+    /**
+     * @var int
+     */
+    protected $remainingFiles;
 
     /**
      * @var CompressionService
@@ -40,25 +59,16 @@ class CompressTask extends AbstractTask
     protected $compressionService;
 
     /**
-     * CompressTask constructor.
-     */
-    public function __construct()
-    {
-        parent::__construct();
-
-        /** @vatschreinerr ObjectManager $objectManager */
-        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-        $this->compressionService = $objectManager->get(CompressionService::class);
-    }
-
-    /**
      * Executes the task.
      *
      * @return bool
      */
-    public function execute()
+    public function execute(): bool
     {
-        $this->filesPerRun = (int)$this->files_per_run;
+        $this->remainingFiles = $this->filesPerRun;
+
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+        $this->compressionService = $objectManager->get(CompressionService::class);
 
         $this->processOriginalFiles();
         $this->processProcessedFiles();
@@ -71,20 +81,19 @@ class CompressTask extends AbstractTask
      */
     protected function processOriginalFiles()
     {
-        if ($this->filesPerRun <= 0 || empty($this->compress_original)) {
+        $supportedExtension = GeneralUtility::trimExplode(',', $this->supportedExtensions);
+
+        if ($this->remainingFiles <= 0 || !$this->compressOriginal || empty($supportedExtension)) {
             return;
         }
 
-        /** @var FileRepository $fileRepository */
-        $fileRepository = GeneralUtility::makeInstance(FileRepository::class);
-        $files = $fileRepository->findByImageCompressionStatus(FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, (int)$this->filesPerRun);
+        $files = $this->compressionService->getUncompressedOriginalFiles($supportedExtension, $this->remainingFiles);
 
         if ($files) {
             /** @var File $file */
             foreach ($files as $file) {
                 $this->compressionService->compress($file);
-
-                $this->filesPerRun--;
+                $this->remainingFiles--;
             }
         }
     }
@@ -94,20 +103,19 @@ class CompressTask extends AbstractTask
      */
     protected function processProcessedFiles()
     {
-        if ($this->filesPerRun <= 0 || empty($this->compress_processed)) {
+        $supportedExtension = GeneralUtility::trimExplode(',', $this->supportedExtensions);
+
+        if ($this->remainingFiles <= 0 || !$this->compressProcessed || empty($supportedExtension)) {
             return;
         }
 
-        /** @var ProcessedFileRepository $processedFileRepository */
-        $processedFileRepository = GeneralUtility::makeInstance(ProcessedFileRepository::class);
-        $files = $processedFileRepository->findByImageCompressionStatus(FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, (int)$this->filesPerRun);
+        $files = $this->compressionService->getUncompressedProcessedFiles($supportedExtension, $this->remainingFiles);
 
         if ($files) {
             /** @var File $file */
             foreach ($files as $file) {
                 $this->compressionService->compress($file);
-
-                $this->filesPerRun--;
+                $this->remainingFiles--;
             }
         }
     }

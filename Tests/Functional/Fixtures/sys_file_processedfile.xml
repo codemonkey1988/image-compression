@@ -16,7 +16,7 @@
         <checksum>3dc4a6c059</checksum>
         <width>64</width>
         <height>40</height>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_processedfile>
     <sys_file_processedfile>
         <uid>2</uid>
@@ -33,7 +33,7 @@
         <checksum>87d023a569</checksum>
         <width>64</width>
         <height>37</height>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_processedfile>
     <sys_file_processedfile>
         <uid>3</uid>
@@ -50,7 +50,7 @@
         <checksum>5f7a1c1964</checksum>
         <width>64</width>
         <height>40</height>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_processedfile>
     <sys_file_processedfile>
         <uid>4</uid>
@@ -67,7 +67,7 @@
         <checksum>79906dd02a</checksum>
         <width>64</width>
         <height>37</height>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_processedfile>
     <sys_file_processedfile>
         <uid>5</uid>
@@ -84,7 +84,7 @@
         <checksum>e25f3e799c</checksum>
         <width>64</width>
         <height>64</height>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_processedfile>
 
     <!-- findUncompressedImages -->
@@ -103,6 +103,6 @@
         <checksum>45d42dff6c</checksum>
         <width>320</width>
         <height>200</height>
-        <image_compression_status>0</image_compression_status>
+        <image_compression_last_compressed>0</image_compression_last_compressed>
     </sys_file_processedfile>
 </dataset>

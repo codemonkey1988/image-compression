@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Signal;
 
 /*
@@ -13,9 +14,10 @@ namespace Codemonkey1988\ImageCompression\Signal;
  *
  */
 
+use Codemonkey1988\ImageCompression\Service\CompressionService;
+use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**
  * Class ResourceStorageSignal
@@ -25,30 +27,30 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 class ResourceStorageSignal
 {
     /**
-     * @var \Codemonkey1988\ImageCompression\Service\CompressionService
+     * @var CompressionService
      */
     protected $compressionService;
     /**
-     * @var \TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility
+     * @var ConfigurationService
      */
-    protected $configurationUtility;
+    protected $configurationService;
 
     /**
-     * @param \Codemonkey1988\ImageCompression\Service\CompressionService $compressionService
+     * @param CompressionService $compressionService
      * @return void
      */
-    public function injectCompressionService(\Codemonkey1988\ImageCompression\Service\CompressionService $compressionService)
+    public function injectCompressionService(CompressionService $compressionService)
     {
         $this->compressionService = $compressionService;
     }
 
     /**
-     * @param ConfigurationUtility $configurationUtility
+     * @param ConfigurationService $configurationService
      * @return void
      */
-    public function injectConfigurationUtility(\TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility)
+    public function injectConfigurationService(ConfigurationService $configurationService)
     {
-        $this->configurationUtility = $configurationUtility;
+        $this->configurationService = $configurationService;
     }
 
     /**
@@ -60,7 +62,7 @@ class ResourceStorageSignal
      */
     public function postFileAdd(File $file, Folder $folder)
     {
-        if ($this->compressOnUploadEnabled()) {
+        if ($this->configurationService->isCompressOnUploadEnabled()) {
             try {
                 $this->compressionService->compress($file);
             } catch (\Exception $e) {
@@ -75,27 +77,13 @@ class ResourceStorageSignal
      * @param string $tmpName
      * @return void
      */
-    public function postFileReplace(File $file, $tmpName)
+    public function postFileReplace(File $file, string $tmpName)
     {
-        if ($this->compressOnUploadEnabled()) {
+        if ($this->configurationService->isCompressOnUploadEnabled()) {
             try {
                 $this->compressionService->compress($file);
             } catch (\Exception $e) {
             }
         }
-    }
-
-    /**
-     * @return bool
-     */
-    protected function compressOnUploadEnabled()
-    {
-        $configuration = $this->configurationUtility->getCurrentConfiguration('image_compression');
-
-        if (isset($configuration['enableCompressOnUpload']['value'])) {
-            return (int)$configuration['enableCompressOnUpload']['value'] === 1;
-        }
-
-        return false;
     }
 }

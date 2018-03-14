@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Resource;
 
 /*
@@ -13,7 +14,7 @@ namespace Codemonkey1988\ImageCompression\Resource;
  *
  */
 
-use TYPO3\CMS\Backend\Utility\BackendUtility;
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DefaultRestrictionContainer;
 use TYPO3\CMS\Core\Resource\FileRepository as BaseFileRepository;
@@ -26,50 +27,17 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  */
 class FileRepository extends BaseFileRepository
 {
-    const IMAGE_COMPRESSION_NOT_PROCESSED = 0;
-    const IMAGE_COMPRESSION_PROCESSED = 1;
-    const IMAGE_COMPRESSION_SKIPPED = 2;
-
     /**
-     * @param int $status
+     * @param array $fileExtensions
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findByImageCompressionStatus($status = self::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
+    public function findUncompressedImages(array $fileExtensions, $limit = 0): array
     {
-        if ($status !== self::IMAGE_COMPRESSION_NOT_PROCESSED && $status !== self::IMAGE_COMPRESSION_PROCESSED && $status !== self::IMAGE_COMPRESSION_SKIPPED) {
-            throw new \InvalidArgumentException('Invalid status given.', 1494225066);
-        }
-
         $fileObjecs = [];
 
-        if (GeneralUtility::compat_version('8.6.0')) {
-            $rows = $this->getRecords($status, $limit);
-        } else {
-            $rows = $this->getRecordsCompat($status, $limit);
-        }
-
-        foreach ($rows as $row) {
-            $fileObjecs[] = $this->createDomainObject($row);
-        }
-
-        return $fileObjecs;
-    }
-
-    /**
-     * Find records for TYPO3 v8 and higher using docrtine.
-     *
-     * @param int $status
-     * @param int $limit
-     *
-     * @return array
-     */
-    protected function getRecords($status, $limit)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('sys_file');
-
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file');
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(DefaultRestrictionContainer::class));
 
         $qb = $queryBuilder
@@ -83,8 +51,16 @@ class FileRepository extends BaseFileRepository
             )
             ->where(
                 $queryBuilder->expr()->eq(
-                    'metadata.image_compression_status',
-                    $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
+                    'metadata.image_compression_last_compressed',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'metadata.image_compression_last_checked',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->in(
+                    'sys_file.extension',
+                    $queryBuilder->createNamedParameter($fileExtensions, Connection::PARAM_STR_ARRAY)
                 )
             )
             ->orderBy('sys_file.uid', 'ASC');
@@ -93,31 +69,12 @@ class FileRepository extends BaseFileRepository
             $qb->setMaxResults($limit);
         }
 
-        $res = $qb->execute();
+        $statement = $qb->execute();
 
-        return $res->fetchAll();
-    }
+        while ($row = $statement->fetch()) {
+            $fileObjecs[] = $this->createDomainObject($row);
+        }
 
-    /**
-     * Find records for TYPO3 v7
-     *
-     * @param int $status
-     * @param int $limit
-     *
-     * @return array
-     */
-    protected function getRecordsCompat($status, $limit)
-    {
-        $enabledFieldsWhereClause = BackendUtility::BEenableFields('sys_file');
-        $enabledFieldsWhereClause .= BackendUtility::deleteClause('sys_file');
-
-        return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            'sys_file.*, sys_file_metadata.*',
-            'sys_file, sys_file_metadata',
-            'sys_file.uid=sys_file_metadata.file AND sys_file_metadata.image_compression_status=' . $status . $enabledFieldsWhereClause,
-            '',
-            'sys_file.uid ASC',
-            ((int)$limit > 0) ? (int)$limit : ''
-        );
+        return $fileObjecs;
     }
 }

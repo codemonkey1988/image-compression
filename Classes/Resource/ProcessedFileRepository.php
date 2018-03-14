@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Resource;
 
 /*
@@ -13,9 +14,9 @@ namespace Codemonkey1988\ImageCompression\Resource;
  *
  */
 
+use TYPO3\CMS\Core\Database\Connection;
 use TYPO3\CMS\Core\Database\ConnectionPool;
 use TYPO3\CMS\Core\Database\Query\Restriction\DefaultRestrictionContainer;
-use TYPO3\CMS\Core\Resource\ProcessedFileRepository as BaseProcessedFileRepository;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 
 /**
@@ -23,61 +24,46 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
  *
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
-class ProcessedFileRepository extends BaseProcessedFileRepository
+class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepository
 {
     /**
-     * @param int $status
+     * @param array $fileExtensions
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findByImageCompressionStatus($status = FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED, $limit = 0)
+    public function findUnCompressedImages(array $fileExtensions, $limit = 0): array
     {
-        if ($status !== FileRepository::IMAGE_COMPRESSION_NOT_PROCESSED && $status !== FileRepository::IMAGE_COMPRESSION_PROCESSED && $status !== FileRepository::IMAGE_COMPRESSION_SKIPPED) {
-            throw new \InvalidArgumentException('Invalid status given.', 1494225066);
-        }
-
         $fileObjecs = [];
 
-        if (GeneralUtility::compat_version('8.6.0')) {
-            $rows = $this->getRecords($status, $limit);
-        } else {
-            $rows = $this->getRecordsCompat($status, $limit);
-        }
-
-        foreach ($rows as $row) {
-            $fileObjecs[] = $this->createDomainObject($row);
-        }
-
-        return $fileObjecs;
-    }
-
-    /**
-     * Find records for TYPO3 v8 and higher using docrtine.
-     *
-     * @param int $status
-     * @param int $limit
-     *
-     * @return array
-     */
-    protected function getRecords($status, $limit)
-    {
-        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
-            ->getQueryBuilderForTable('sys_file_processedfile');
-
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)->getQueryBuilderForTable('sys_file_processedfile');
         $queryBuilder->setRestrictions(GeneralUtility::makeInstance(DefaultRestrictionContainer::class));
 
         $qb = $queryBuilder
-            ->select('*')
+            ->select('sys_file_processedfile.*')
             ->from('sys_file_processedfile')
+            ->join(
+                'sys_file_processedfile',
+                'sys_file',
+                'sys_file',
+                $queryBuilder->expr()->eq('sys_file_processedfile.original', $queryBuilder->quoteIdentifier('sys_file.uid'))
+            )
             ->where(
                 $queryBuilder->expr()->eq(
-                    'image_compression_status',
-                    $queryBuilder->createNamedParameter($status, \PDO::PARAM_INT)
+                    'sys_file_processedfile.image_compression_last_compressed',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
                 ),
                 $queryBuilder->expr()->eq(
-                    'task_type',
-                    $queryBuilder->createNamedParameter('Image.CropScaleMask', \PDO::PARAM_STR)
+                    'sys_file_processedfile.image_compression_last_checked',
+                    $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->eq(
+                    'sys_file_processedfile.task_type',
+                    $queryBuilder->createNamedParameter('Image.CropScaleMask', Connection::PARAM_STR)
+                ),
+                $queryBuilder->expr()->in(
+                    'sys_file.extension',
+                    $queryBuilder->createNamedParameter($fileExtensions, Connection::PARAM_STR_ARRAY)
                 )
             )
             ->orderBy('uid', 'ASC');
@@ -88,26 +74,10 @@ class ProcessedFileRepository extends BaseProcessedFileRepository
 
         $res = $qb->execute();
 
-        return $res->fetchAll();
-    }
+        while ($row = $res->fetch()) {
+            $fileObjecs[] = $this->createDomainObject($row);
+        }
 
-    /**
-     * Find records for TYPO3 v7
-     *
-     * @param int $status
-     * @param int $limit
-     *
-     * @return array
-     */
-    protected function getRecordsCompat($status, $limit)
-    {
-        return $GLOBALS['TYPO3_DB']->exec_SELECTgetRows(
-            '*',
-            'sys_file_processedfile',
-            'image_compression_status = ' . $status . ' AND task_type="Image.CropScaleMask"',
-            '',
-            'uid ASC',
-            ((int)$limit > 0) ? (int)$limit : ''
-        );
+        return $fileObjecs;
     }
 }

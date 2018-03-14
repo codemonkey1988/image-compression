@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Service;
 
 /*
@@ -13,69 +14,206 @@ namespace Codemonkey1988\ImageCompression\Service;
  *
  */
 
-use Codemonkey1988\ImageCompression\Compressor\CompressorFactory;
+use Codemonkey1988\ImageCompression\Compressor\CompressorInterface;
+use Codemonkey1988\ImageCompression\Resource\FileRepository;
+use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
+use TYPO3\CMS\Core\Database\ConnectionPool;
+use TYPO3\CMS\Core\Resource\AbstractFile;
 use TYPO3\CMS\Core\Resource\File;
-use TYPO3\CMS\Core\Resource\FileInterface;
+use TYPO3\CMS\Core\SingletonInterface;
+use TYPO3\CMS\Core\Utility\GeneralUtility;
+use TYPO3\CMS\Extbase\Object\ObjectManager;
 
 /**
  * Class CompressionService
  *
  * @author  Tim Schreiner <schreiner.tim@gmail.com>
  */
-class CompressionService
+class CompressionService implements SingletonInterface
 {
+    /**
+     * All available compressors.
+     *
+     * @var array
+     */
+    protected $compressors = [];
+
+    /**
+     * @var FileRepository
+     */
+    protected $fileRepository;
+
+    /**
+     * @var ProcessedFileRepository
+     */
+    protected $processedFileRepository;
+
+    /**
+     * CompressionService constructor.
+     */
+    public function __construct()
+    {
+        if (!empty($GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'])) {
+            $this->compressors = $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'];
+        }
+    }
+
+    /**
+     * @param FileRepository $fileRepository
+     */
+    public function injectFileRepository(FileRepository $fileRepository)
+    {
+        $this->fileRepository = $fileRepository;
+    }
+
+    /**
+     * @param ProcessedFileRepository $processedFileRepository
+     */
+    public function injectProcessedFileRepository(ProcessedFileRepository $processedFileRepository)
+    {
+        $this->processedFileRepository = $processedFileRepository;
+    }
+
     /**
      * Compress an image file.
      *
-     * @param FileInterface $file
-     * @return bool
-     */
-    public function compress(FileInterface $file)
-    {
-        $uid = $file->getProperty('uid');
-        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
-        $compressor = CompressorFactory::getCompressor($file);
-
-        if ($compressor !== null) {
-            $success = $compressor->compress($file);
-
-            $this->updateCompressionStatus($uid, $table, ($success === true) ? 1 : 2);
-
-            return $success;
-        }
-
-        return true;
-    }
-
-    /**
-     * @param int $fileUid
-     * @param string $table
-     * @param int $status
+     * @param AbstractFile $file
      * @return void
      */
-    protected function updateCompressionStatus($fileUid, $table, $status)
+    public function compress(AbstractFile $file)
     {
-        $where = 'uid=' . $fileUid;
+        $compressor = $this->getFirstMatchingCompressor($file);
 
-        if ($table === 'sys_file_metadata') {
-            $where = 'file=' . $fileUid;
+        if ($compressor !== null && $compressor->compress($file) === true) {
+            $this->updateCompressionStatus($file);
+            $this->updatePostProcess($file);
         }
 
-        // Update compression status for this file.
-        $this->getDatabaseConnection()->exec_UPDATEquery(
-            $table,
-            $where,
-            [
-                'image_compression_status' => $status,
-            ]
-        );
+        // Mark file as "processed"
+        $this->updateCheckedStatus($file);
     }
 
     /**
-     * @return \TYPO3\CMS\Core\Database\DatabaseConnection
+     * @param array $fileExtensions
+     * @param int $limit
+     * @return array
      */
-    protected function getDatabaseConnection()
+    public function getUncompressedOriginalFiles(array $fileExtensions, int $limit): array
     {
-        return $GLOBALS['TYPO3_DB'];
+        return $this->fileRepository->findUncompressedImages($fileExtensions, $limit);
+    }
+
+    /**
+     * @param array $fileExtensions
+     * @param int $limit
+     * @return array
+     */
+    public function getUncompressedProcessedFiles(array $fileExtensions, int $limit): array
+    {
+        return $this->processedFileRepository->findUncompressedImages($fileExtensions, $limit);
+    }
+
+    /**
+     * Find the first compressor that can compress the given file.
+     *
+     * @param AbstractFile $file
+     * @return CompressorInterface|null
+     */
+    protected function getFirstMatchingCompressor(AbstractFile $file)
+    {
+        $imageCompressor = null;
+        /** @var ObjectManager $objectManager */
+        $objectManager = GeneralUtility::makeInstance(ObjectManager::class);
+
+        /** @var CompressorInterface $object */
+        foreach ($this->compressors as $compressor) {
+            if (is_string($compressor)) {
+                $compressor = $objectManager->get($compressor);
+            }
+
+            if ($compressor instanceof CompressorInterface && $compressor->canCompress($file)) {
+                $imageCompressor = $compressor;
+            }
+        }
+
+        return $imageCompressor;
+    }
+
+    /**
+     * Update the compression status.
+     *
+     * @param AbstractFile $file
+     * @return void
+     */
+    protected function updateCompressionStatus(AbstractFile $file)
+    {
+        $now = new \DateTime();
+        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
+        $field = ($file instanceof File) ? 'file' : 'uid';
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table);
+
+        $queryBuilder
+            ->update($table)
+            ->where(
+                $queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
+            )
+            ->set('image_compression_last_compressed', $now->getTimestamp())
+            ->set('tstamp', $now->getTimestamp())
+            ->execute();
+    }
+
+    /**
+     * Update the checked status.
+     *
+     * @param AbstractFile $file
+     * @return void
+     */
+    protected function updateCheckedStatus(AbstractFile $file)
+    {
+        $now = new \DateTime();
+        $table = ($file instanceof File) ? 'sys_file_metadata' : 'sys_file_processedfile';
+        $field = ($file instanceof File) ? 'file' : 'uid';
+
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable($table);
+
+        $queryBuilder
+            ->update($table)
+            ->where(
+                $queryBuilder->expr()->eq($field, $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
+            )
+            ->set('image_compression_last_checked', $now->getTimestamp())
+            ->execute();
+    }
+
+    /**
+     * Updates necessary database fields after successful image compression.
+     *
+     * @param AbstractFile $file
+     * @return void
+     */
+    protected function updatePostProcess(AbstractFile $file)
+    {
+        // There are only database updates, when the original file is compressed.
+        if (($file instanceof File) === false) {
+            return;
+        }
+
+        $size = filesize($file->getForLocalProcessing(false));
+
+        // Update sys_file table. Fields: size
+        // Do not update modification time, because it makes all processed images from this image invalid. (See checksum generation)
+        $queryBuilder = GeneralUtility::makeInstance(ConnectionPool::class)
+            ->getQueryBuilderForTable('sys_file');
+
+        $queryBuilder
+            ->update('sys_file')
+            ->where(
+                $queryBuilder->expr()->eq('uid', $queryBuilder->createNamedParameter($file->getUid(), \PDO::PARAM_INT))
+            )
+            ->set('size', $size)
+            ->execute();
     }
 }

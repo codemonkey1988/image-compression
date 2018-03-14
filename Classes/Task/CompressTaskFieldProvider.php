@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Task;
 
 /*
@@ -31,7 +32,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
     protected $taskInfo;
 
     /**
-     * @var \TYPO3\CMS\Scheduler\Task\AbstractTask
+     * @var CompressTask
      */
     protected $task;
 
@@ -46,7 +47,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param SchedulerModuleController $schedulerModule
      * @return array
      */
-    public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule)
+    public function getAdditionalFields(array &$taskInfo, $task, SchedulerModuleController $schedulerModule): array
     {
         $this->taskInfo = &$taskInfo;
         $this->task = $task;
@@ -55,11 +56,13 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         $filesPerRunId = 'files_per_run';
         $compressOriginal = 'compress_original';
         $compressProcessed = 'compress_processed';
+        $supportedExtension = 'supported_extensions';
 
         return [
-            $filesPerRunId => $this->generateFieldPerRunField($filesPerRunId),
+            $filesPerRunId => $this->generateFilesPerRunField($filesPerRunId),
             $compressOriginal => $this->generateCompressOriginalField($compressOriginal),
             $compressProcessed => $this->generateCompressProcessedField($compressProcessed),
+            $supportedExtension => $this->generateSupportedExtensionsField($supportedExtension),
         ];
     }
 
@@ -68,14 +71,24 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param SchedulerModuleController $schedulerModule
      * @return bool
      */
-    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule)
+    public function validateAdditionalFields(array &$submittedData, SchedulerModuleController $schedulerModule): bool
     {
-        if (!is_numeric($submittedData['files_per_run'])) {
+        if (empty($submittedData['files_per_run'])) {
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('Please enter a numeric value'), FlashMessage::ERROR);
+
+            return false;
+        } elseif (!is_numeric($submittedData['files_per_run'])) {
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('Value has to be numeric'), FlashMessage::ERROR);
 
             return false;
         } elseif (intval($submittedData['files_per_run']) <= 0) {
             $schedulerModule->addMessage($GLOBALS['LANG']->sL('Value has to be greater 0'), FlashMessage::ERROR);
+
+            return false;
+        }
+
+        if (empty($submittedData['supported_extensions'])) {
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('Please enter file extensions to process'), FlashMessage::ERROR);
 
             return false;
         }
@@ -89,26 +102,29 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      */
     public function saveAdditionalFields(array $submittedData, AbstractTask $task)
     {
-        $task->files_per_run = $submittedData['files_per_run'];
-        $task->compress_original = $submittedData['compress_original'];
-        $task->compress_processed = $submittedData['compress_processed'];
+        if ($task instanceof CompressTask) {
+            $task->filesPerRun = (int)$submittedData['files_per_run'];
+            $task->compressOriginal = !empty($submittedData['compress_original']);
+            $task->compressProcessed = !empty($submittedData['compress_processed']);
+            $task->supportedExtensions = $submittedData['supported_extensions'];
+        }
     }
 
     /**
      * @param string $fieldId
      * @return array
      */
-    protected function generateFieldPerRunField($fieldId)
+    protected function generateFilesPerRunField(string $fieldId): array
     {
         if (!isset($taskInfo['files_per_run'])) {
             $taskInfo['files_per_run'] = '25';
 
             if ($this->schedulerModule->CMD === 'edit') {
-                $taskInfo['files_per_run'] = $this->task->files_per_run;
+                $taskInfo['files_per_run'] = $this->task->filesPerRun;
             }
         }
 
-        $fieldHtml = '<input type="text" name="tx_scheduler[files_per_run]" id="' . $fieldId . '" value="' . htmlspecialchars($taskInfo['files_per_run']) . '" />';
+        $fieldHtml = '<input type="text" name="tx_scheduler[files_per_run]" id="' . $fieldId . '" value="' . (int)$taskInfo['files_per_run'] . '" />';
 
         return [
             'code' => $fieldHtml,
@@ -122,13 +138,13 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param string $fieldId
      * @return array
      */
-    protected function generateCompressOriginalField($fieldId)
+    protected function generateCompressOriginalField(string $fieldId): array
     {
         if (!isset($taskInfo['compress_original'])) {
             $taskInfo['compress_original'] = '1';
 
             if ($this->schedulerModule->CMD === 'edit') {
-                $taskInfo['compress_original'] = $this->task->compress_original;
+                $taskInfo['compress_original'] = $this->task->compressOriginal;
             }
         }
 
@@ -152,13 +168,13 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
      * @param string $fieldId
      * @return array
      */
-    protected function generateCompressProcessedField($fieldId)
+    protected function generateCompressProcessedField(string $fieldId): array
     {
         if (!isset($taskInfo['compress_processed'])) {
             $taskInfo['compress_processed'] = '1';
 
             if ($this->schedulerModule->CMD === 'edit') {
-                $taskInfo['compress_processed'] = $this->task->compress_processed;
+                $taskInfo['compress_processed'] = $this->task->compressProcessed;
             }
         }
 
@@ -173,6 +189,30 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         return [
             'code' => $fieldHtml,
             'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.compress_processed',
+            'cshKey' => '_MOD_tools_txschedulerM1',
+            'cshLabel' => $fieldId,
+        ];
+    }
+
+    /**
+     * @param string $fieldId
+     * @return array
+     */
+    protected function generateSupportedExtensionsField(string $fieldId): array
+    {
+        if (!isset($taskInfo['supported_extensions'])) {
+            $taskInfo['supported_extensions'] = 'jpg,jpeg,png';
+
+            if ($this->schedulerModule->CMD === 'edit') {
+                $taskInfo['supported_extensions'] = $this->task->supportedExtensions;
+            }
+        }
+
+        $fieldHtml = '<input type="text" name="tx_scheduler[supported_extensions]" id="' . $fieldId . '" value="' . htmlspecialchars($taskInfo['supported_extensions']) . '" />';
+
+        return [
+            'code' => $fieldHtml,
+            'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.supported_extensions',
             'cshKey' => '_MOD_tools_txschedulerM1',
             'cshLabel' => $fieldId,
         ];

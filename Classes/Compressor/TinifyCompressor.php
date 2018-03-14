@@ -1,4 +1,5 @@
 <?php
+declare(strict_types=1);
 namespace Codemonkey1988\ImageCompression\Compressor;
 
 /*
@@ -13,9 +14,8 @@ namespace Codemonkey1988\ImageCompression\Compressor;
  *
  */
 
+use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\FileInterface;
-use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**
  * Class CompressionService
@@ -25,22 +25,22 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 class TinifyCompressor implements CompressorInterface
 {
     /**
-     * @var \TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility
-     */
-    protected $configurationUtility;
-    /**
      * @var array
      */
-    protected $configuration;
+    protected $supportedExtensions = ['png', 'jpg', 'jpeg'];
 
     /**
-     * @param ConfigurationUtility $configurationUtility
+     * @var ConfigurationService
+     */
+    protected $configurationService;
+
+    /**
+     * @param ConfigurationService $configurationService
      * @return void
      */
-    public function injectConfigurationUtility(\TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility $configurationUtility)
+    public function injectConfigurationService(ConfigurationService $configurationService)
     {
-        $this->configurationUtility = $configurationUtility;
-        $this->configuration = $this->configurationUtility->getCurrentConfiguration('image_compression');
+        $this->configurationService = $configurationService;
     }
 
     /**
@@ -48,16 +48,8 @@ class TinifyCompressor implements CompressorInterface
      */
     public function initializeObject()
     {
-        \Tinify\setKey($this->getApiKey());
+        \Tinify\setKey($this->configurationService->getTinifyApiKey());
         \Tinify\setAppIdentifier('t3_image_compression');
-    }
-
-    /**
-     * @return string
-     */
-    public function getName()
-    {
-        return 'tinify';
     }
 
     /**
@@ -66,11 +58,15 @@ class TinifyCompressor implements CompressorInterface
      */
     public function canCompress(FileInterface $file)
     {
-        $from = new \DateTime('first day of this month 00:00:01');
-        $to = new \DateTime('last day of this month 23:59:59');
-        $limitNotReached = false;
+        $apiKey = $this->configurationService->getTinifyApiKey();
+        $maxCompressed = $this->configurationService->getTinifyMaxMonthlyCompressionCount();
+        $currentCompressed = $this->getCurrentCompressionCount();
+        $storage = $file->getStorage();
 
-        return $this->getApiKey() && (in_array($file->getExtension(), $this->getSupportedExtensions())) && $limitNotReached;
+        return !empty($apiKey)
+            && (in_array($file->getExtension(), $this->supportedExtensions))
+            && $currentCompressed < $maxCompressed
+            && $storage->getDriverType() === 'Local';
     }
 
     /**
@@ -80,7 +76,7 @@ class TinifyCompressor implements CompressorInterface
     public function compress(FileInterface $file)
     {
         try {
-            $publicUrl = PATH_site . $file->getPublicUrl();
+            $publicUrl = $file->getForLocalProcessing(false);
             $sourceFile = \Tinify\fromFile($publicUrl);
             $sourceFile->toFile($publicUrl);
 
@@ -91,38 +87,10 @@ class TinifyCompressor implements CompressorInterface
     }
 
     /**
-     * @return string
-     */
-    protected function getApiKey()
-    {
-        if (is_array($this->configuration) && isset($this->configuration['tinifyApiKey']['value'])) {
-            return $this->configuration['tinifyApiKey']['value'];
-        }
-
-        return '';
-    }
-
-    /**
      * @return int
      */
-    protected function getCompressionCount()
+    protected function getCurrentCompressionCount(): int
     {
-        if (is_array($this->configuration) && isset($this->configuration['tinifyCompressionCount']['value'])) {
-            return (int)$this->configuration['tinifyCompressionCount']['value'];
-        }
-
-        return 0;
-    }
-
-    /**
-     * @return array
-     */
-    protected function getSupportedExtensions()
-    {
-        if (is_array($this->configuration) && isset($this->configuration['tinifyExtensions']['value'])) {
-            return GeneralUtility::trimExplode(',', $this->configuration['tinifyExtensions']['value']);
-        }
-
-        return [];
+        return (int)\Tinify\getCompressionCount();
     }
 }
