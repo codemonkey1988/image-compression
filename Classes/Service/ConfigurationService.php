@@ -57,18 +57,6 @@ class ConfigurationService implements SingletonInterface
     }
 
     /**
-     * @return array
-     */
-    public function getTinifySupportedExtensions(): array
-    {
-        if (is_array($this->extensionConfiguration) && !empty($this->extensionConfiguration['tinifyExtensions']['value'])) {
-            return GeneralUtility::trimExplode(',', $this->extensionConfiguration['tinifyExtensions']['value']);
-        }
-
-        return [];
-    }
-
-    /**
      * @return int
      */
     public function getTinifyMaxMonthlyCompressionCount(): int

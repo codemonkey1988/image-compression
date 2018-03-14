@@ -25,6 +25,11 @@ use TYPO3\CMS\Core\Resource\FileInterface;
 class TinifyCompressor implements CompressorInterface
 {
     /**
+     * @var array
+     */
+    protected $supportedExtensions = ['png','jpg','jpeg'];
+
+    /**
      * @var ConfigurationService
      */
     protected $configurationService;
@@ -54,13 +59,12 @@ class TinifyCompressor implements CompressorInterface
     public function canCompress(FileInterface $file)
     {
         $apiKey = $this->configurationService->getTinifyApiKey();
-        $supportedExtensions = $this->configurationService->getTinifySupportedExtensions();
         $maxCompressed = $this->configurationService->getTinifyMaxMonthlyCompressionCount();
         $currentCompressed = $this->getCurrentCompressionCount();
         $storage = $file->getStorage();
 
         return !empty($apiKey)
-            && (in_array($file->getExtension(), $supportedExtensions))
+            && (in_array($file->getExtension(), $this->supportedExtensions))
             && $currentCompressed < $maxCompressed
             && $storage->getDriverType() === 'Local';
     }

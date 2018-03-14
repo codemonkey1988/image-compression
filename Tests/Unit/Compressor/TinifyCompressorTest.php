@@ -40,7 +40,6 @@ class TinifyCompressorTest extends UnitTestCase
         );
         $this->mockedConfigurationService->method('getTinifyApiKey')->willReturn('mytestapikey');
         $this->mockedConfigurationService->method('getTinifyMaxMonthlyCompressionCount')->willReturn(500);
-        $this->mockedConfigurationService->method('getTinifySupportedExtensions')->willReturn(['jpg', 'jpeg', 'png']);
     }
 
     /**

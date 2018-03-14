@@ -9,6 +9,3 @@ tinifyApiKey =
 
 # cat=tinify/config; type=int+; label=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:tinifyCompressionCount
 tinifyCompressionCount = 500
-
-# cat=tinify/config; type=string; label=LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:tinifyExtensions
-tinifyExtensions = png,jpg,jpeg
