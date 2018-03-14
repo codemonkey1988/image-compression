@@ -28,7 +28,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class FileRepository extends BaseFileRepository
 {
     /**
-     * @param array $fileExtensions
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array

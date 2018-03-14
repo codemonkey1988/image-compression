@@ -27,7 +27,6 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class ProcessedFileRepository extends \TYPO3\CMS\Core\Resource\ProcessedFileRepository
 {
     /**
-     * @param array $fileExtensions
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array
