@@ -40,6 +40,9 @@
             <trans-unit id="task.compress.field.compress_processed">
                 <source>Compress processed files</source>
             </trans-unit>
+            <trans-unit id="task.compress.field.supported_extensions">
+                <source>Supported file extensions (comma-separated)</source>
+            </trans-unit>
         </body>
     </file>
 </xliff>

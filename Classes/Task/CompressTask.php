@@ -44,6 +44,11 @@ class CompressTask extends AbstractTask
     public $compressProcessed;
 
     /**
+     * @var string
+     */
+    public $supportedExtensions;
+
+    /**
      * @var int
      */
     protected $remainingFiles;
@@ -76,11 +81,13 @@ class CompressTask extends AbstractTask
      */
     protected function processOriginalFiles()
     {
-        if ($this->remainingFiles <= 0 || !$this->compressOriginal) {
+        $supportedExtension = GeneralUtility::trimExplode(',', $this->supportedExtensions);
+
+        if ($this->remainingFiles <= 0 || !$this->compressOriginal || empty($supportedExtension)) {
             return;
         }
 
-        $files = $this->compressionService->getUncompressedOriginalFiles($this->remainingFiles);
+        $files = $this->compressionService->getUncompressedOriginalFiles($supportedExtension, $this->remainingFiles);
 
         if ($files) {
             /** @var File $file */
@@ -96,11 +103,13 @@ class CompressTask extends AbstractTask
      */
     protected function processProcessedFiles()
     {
-        if ($this->remainingFiles <= 0 || !$this->compressProcessed) {
+        $supportedExtension = GeneralUtility::trimExplode(',', $this->supportedExtensions);
+
+        if ($this->remainingFiles <= 0 || !$this->compressProcessed ||empty($supportedExtension)) {
             return;
         }
 
-        $files = $this->compressionService->getUncompressedProcessedFiles($this->remainingFiles);
+        $files = $this->compressionService->getUncompressedProcessedFiles($supportedExtension, $this->remainingFiles);
 
         if ($files) {
             /** @var File $file */

@@ -28,11 +28,12 @@ use TYPO3\CMS\Core\Utility\GeneralUtility;
 class FileRepository extends BaseFileRepository
 {
     /**
+     * @param array $fileExtensions
      * @param int $limit
      * @throws \InvalidArgumentException
      * @return array
      */
-    public function findUncompressedImages($limit = 0): array
+    public function findUncompressedImages(array $fileExtensions, $limit = 0): array
     {
         $fileObjecs = [];
 
@@ -56,6 +57,10 @@ class FileRepository extends BaseFileRepository
                 $queryBuilder->expr()->eq(
                     'metadata.image_compression_last_checked',
                     $queryBuilder->createNamedParameter(0, Connection::PARAM_INT)
+                ),
+                $queryBuilder->expr()->in(
+                    'sys_file.extension',
+                    $queryBuilder->createNamedParameter($fileExtensions, Connection::PARAM_STR_ARRAY)
                 )
             )
             ->orderBy('sys_file.uid', 'ASC');

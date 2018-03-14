@@ -56,11 +56,13 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         $filesPerRunId = 'files_per_run';
         $compressOriginal = 'compress_original';
         $compressProcessed = 'compress_processed';
+        $supportedExtension = 'supported_extensions';
 
         return [
             $filesPerRunId => $this->generateFieldPerRunField($filesPerRunId),
             $compressOriginal => $this->generateCompressOriginalField($compressOriginal),
             $compressProcessed => $this->generateCompressProcessedField($compressProcessed),
+            $supportedExtension => $this->generateSupportedExtensionsField($supportedExtension),
         ];
     }
 
@@ -85,6 +87,12 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
             return false;
         }
 
+        if (empty($submittedData['supported_extensions'])) {
+            $schedulerModule->addMessage($GLOBALS['LANG']->sL('Please enter file extensions to process'), FlashMessage::ERROR);
+
+            return false;
+        }
+
         return true;
     }
 
@@ -98,6 +106,7 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
             $task->filesPerRun = (int)$submittedData['files_per_run'];
             $task->compressOriginal = !empty($submittedData['compress_original']);
             $task->compressProcessed = !empty($submittedData['compress_processed']);
+            $task->supportedExtensions = $submittedData['supported_extensions'];
         }
     }
 
@@ -180,6 +189,30 @@ class CompressTaskFieldProvider implements AdditionalFieldProviderInterface
         return [
             'code' => $fieldHtml,
             'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.compress_processed',
+            'cshKey' => '_MOD_tools_txschedulerM1',
+            'cshLabel' => $fieldId,
+        ];
+    }
+
+    /**
+     * @param string $fieldId
+     * @return array
+     */
+    protected function generateSupportedExtensionsField(string $fieldId): array
+    {
+        if (!isset($taskInfo['supported_extensions'])) {
+            $taskInfo['supported_extensions'] = 'jpg,jpeg,png';
+
+            if ($this->schedulerModule->CMD === 'edit') {
+                $taskInfo['supported_extensions'] = $this->task->supportedExtensions;
+            }
+        }
+
+        $fieldHtml = '<input type="text" name="tx_scheduler[supported_extensions]" id="' . $fieldId . '" value="' . htmlspecialchars($taskInfo['supported_extensions']) . '" />';
+
+        return [
+            'code' => $fieldHtml,
+            'label' => 'LLL:EXT:image_compression/Resources/Private/Language/locallang_be.xlf:task.compress.field.supported_extensions',
             'cshKey' => '_MOD_tools_txschedulerM1',
             'cshLabel' => $fieldId,
         ];

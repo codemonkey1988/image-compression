@@ -93,21 +93,23 @@ class CompressionService implements SingletonInterface
     }
 
     /**
+     * @param array $fileExtensions
      * @param int $limit
      * @return array
      */
-    public function getUncompressedOriginalFiles(int $limit): array
+    public function getUncompressedOriginalFiles(array $fileExtensions, int $limit): array
     {
-        return $this->fileRepository->findUncompressedImages($limit);
+        return $this->fileRepository->findUncompressedImages($fileExtensions, $limit);
     }
 
     /**
+     * @param array $fileExtensions
      * @param int $limit
      * @return array
      */
-    public function getUncompressedProcessedFiles(int $limit): array
+    public function getUncompressedProcessedFiles(array $fileExtensions, int $limit): array
     {
-        return $this->processedFileRepository->findUncompressedImages($limit);
+        return $this->processedFileRepository->findUncompressedImages($fileExtensions, $limit);
     }
 
     /**
