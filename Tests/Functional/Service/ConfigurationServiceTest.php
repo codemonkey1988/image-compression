@@ -17,7 +17,6 @@ namespace Codemonkey1988\ImageCompression\Tests\Unit\Compressor;
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
-use TYPO3\CMS\Extbase\Object\ObjectManager;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
 use TYPO3\CMS\Lang\LanguageService;
 
