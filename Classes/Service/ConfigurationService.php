@@ -15,7 +15,6 @@ namespace Codemonkey1988\ImageCompression\Service;
  */
 
 use TYPO3\CMS\Core\SingletonInterface;
-use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 
 /**
  * Class ConfigurationService
@@ -25,22 +24,19 @@ use TYPO3\CMS\Extensionmanager\Utility\ConfigurationUtility;
 class ConfigurationService implements SingletonInterface
 {
     /**
-     * @var ConfigurationUtility
-     */
-    protected $configurationUtility;
-
-    /**
      * @var array
      */
     protected $extensionConfiguration;
 
-    /**
-     * @param ConfigurationUtility $configurationUtility
-     */
-    public function injectConfigurationUtility(ConfigurationUtility $configurationUtility)
+    public function __construct()
     {
-        $this->configurationUtility = $configurationUtility;
-        $this->extensionConfiguration = $this->configurationUtility->getCurrentConfiguration('image_compression');
+        $this->extensionConfiguration = [];
+
+        if (isset($GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['image_compression'])) {
+            $this->extensionConfiguration = $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['image_compression'];
+        } elseif (isset($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['image_compression'])) {
+            $this->extensionConfiguration = unserialize($GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['image_compression']);
+        }
     }
 
     /**
@@ -48,8 +44,8 @@ class ConfigurationService implements SingletonInterface
      */
     public function isCompressOnUploadEnabled(): bool
     {
-        if (is_array($this->extensionConfiguration) && !empty($this->extensionConfiguration['enableCompressOnUpload']['value'])) {
-            return (int)$this->extensionConfiguration['enableCompressOnUpload']['value'] === 1;
+        if (!empty($this->extensionConfiguration['enableCompressOnUpload'])) {
+            return (int)$this->extensionConfiguration['enableCompressOnUpload'] === 1;
         }
 
         return false;
@@ -60,11 +56,11 @@ class ConfigurationService implements SingletonInterface
      */
     public function getTinifyMaxMonthlyCompressionCount(): int
     {
-        if (is_array($this->extensionConfiguration) && !empty($this->extensionConfiguration['tinifyCompressionCount']['value'])) {
-            return (int)$this->extensionConfiguration['tinifyCompressionCount']['value'];
+        if (!empty($this->extensionConfiguration['tinifyCompressionCount'])) {
+            return (int)$this->extensionConfiguration['tinifyCompressionCount'];
         }
 
-        return 0;
+        return 500;
     }
 
     /**
@@ -72,8 +68,8 @@ class ConfigurationService implements SingletonInterface
      */
     public function getTinifyApiKey(): string
     {
-        if (is_array($this->extensionConfiguration) && !empty($this->extensionConfiguration['tinifyApiKey']['value'])) {
-            return trim($this->extensionConfiguration['tinifyApiKey']['value']);
+        if (!empty($this->extensionConfiguration['tinifyApiKey'])) {
+            return trim($this->extensionConfiguration['tinifyApiKey']);
         }
 
         return '';

@@ -37,8 +37,6 @@ class ConfigurationServiceTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
-
         $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
         $GLOBALS['LANG']->init('en');
     }
@@ -50,7 +48,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
      */
     public function testDefaultConfiguration()
     {
-        $configurationService = $this->objectManager->get(ConfigurationService::class);
+        $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
 
         $this->assertFalse($configurationService->isCompressOnUploadEnabled());
 
@@ -64,7 +62,7 @@ class ConfigurationServiceTest extends FunctionalTestCase
      *
      * @test
      */
-    public function testCustomConfiguration()
+    public function testCustomConfigurationV8()
     {
         $GLOBALS['TYPO3_CONF_VARS']['EXT']['extConf']['image_compression'] = serialize([
             'enableCompressOnUpload' => '1',
@@ -73,7 +71,30 @@ class ConfigurationServiceTest extends FunctionalTestCase
             'tinifyExtensions' => 'tiff,gif',
         ]);
 
-        $configurationService = $this->objectManager->get(ConfigurationService::class);
+        $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
+
+        $this->assertTrue($configurationService->isCompressOnUploadEnabled());
+
+        // Default Tinify config
+        $this->assertEquals('MyApiKey', $configurationService->getTinifyApiKey());
+        $this->assertEquals(600, $configurationService->getTinifyMaxMonthlyCompressionCount());
+    }
+
+    /**
+     * Tests the default extension configuration.
+     *
+     * @test
+     */
+    public function testCustomConfigurationV9()
+    {
+        $GLOBALS['TYPO3_CONF_VARS']['EXTENSIONS']['image_compression'] = [
+            'enableCompressOnUpload' => '1',
+            'tinifyApiKey' => 'MyApiKey',
+            'tinifyCompressionCount' => '600',
+            'tinifyExtensions' => 'tiff,gif',
+        ];
+
+        $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
 
         $this->assertTrue($configurationService->isCompressOnUploadEnabled());
 
