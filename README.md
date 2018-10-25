@@ -9,7 +9,7 @@ can take several seconds for each image.
 ## Installation
 This extension can be installed via composer only.
 
-`compser require codemonkey1988/image-compression`
+`composer require codemonkey1988/image-compression`
 
 ## Configuration for tinify.com
 Add a tinify API key to the extension configuration in the extension manager.
