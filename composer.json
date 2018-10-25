@@ -14,14 +14,15 @@
       "role": "Developer"
     }
   ],
+  "minimum-stability": "stable",
   "require": {
-    "typo3/cms-minimal": "^8.7 || 9.5",
+    "typo3/cms-core": "^8.7 || ^9.5",
     "tinify/tinify": "^1.5"
   },
   "require-dev": {
     "friendsofphp/php-cs-fixer": "^2.10",
     "phpunit/phpunit": "^6.0",
-    "nimut/testing-framework": "^3.0"
+    "nimut/testing-framework": "^3.0 || ^4.0"
   },
   "autoload": {
     "psr-4": {
