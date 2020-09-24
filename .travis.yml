@@ -1,8 +1,27 @@
 language: php
+sudo: false
+branches:
+  only:
+    - master
+    - develop
+    - /^feature\/.*$/
+
+services:
+  - mysql
 
 matrix:
   fast_finish: true
   include:
+    - php: 7.4
+      env: TYPO3_VERSION=^10.4
+    - php: 7.3
+      env: TYPO3_VERSION=^10.4
+    - php: 7.2
+      env: TYPO3_VERSION=^10.4
+    - php: 7.4
+      env: TYPO3_VERSION=^9.5
+    - php: 7.3
+      env: TYPO3_VERSION=^9.5
     - php: 7.2
       env: TYPO3_VERSION=^9.5
     - php: 7.2
@@ -29,8 +48,17 @@ before_install:
 
 before_script:
   - phpenv config-rm xdebug.ini
-  - composer require typo3/minimal=$TYPO3_VERSION
-  # Restore composer.json
+  - |
+    composer require \
+      typo3/cms-backend="$TYPO3_VERSION" \
+      typo3/cms-recordlist="$TYPO3_VERSION" \
+      typo3/cms-core="$TYPO3_VERSION" \
+      typo3/cms-extbase="$TYPO3_VERSION" \
+      typo3/cms-extensionmanager="$TYPO3_VERSION" \
+      typo3/cms-fluid="$TYPO3_VERSION" \
+      typo3/cms-frontend="$TYPO3_VERSION" \
+      typo3/cms-install="$TYPO3_VERSION" \
+      typo3/cms-scheduler="$TYPO3_VERSION" \
   - git checkout composer.json
   - export TYPO3_PATH_WEB=$PWD/.Build/Web
 
@@ -52,6 +80,7 @@ script:
 
   - >
     echo;
+    echo "Running functional tests...";
     export typo3DatabaseName="typo3";
     export typo3DatabaseHost="localhost";
     export typo3DatabaseUsername="root";

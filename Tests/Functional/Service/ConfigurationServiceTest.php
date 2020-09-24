@@ -18,7 +18,6 @@ use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManagerInterface;
-use TYPO3\CMS\Lang\LanguageService;
 
 class ConfigurationServiceTest extends FunctionalTestCase
 {
@@ -36,8 +35,10 @@ class ConfigurationServiceTest extends FunctionalTestCase
     {
         parent::setUp();
 
-        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
-        $GLOBALS['LANG']->init('en');
+        if (class_exists('\\TYPO3\\CMS\\Lang\\LanguageService')) {
+            $GLOBALS['LANG'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Lang\\LanguageService');
+            $GLOBALS['LANG']->init('en');
+        }
     }
 
     /**

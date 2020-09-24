@@ -19,7 +19,6 @@ use Codemonkey1988\ImageCompression\Service\CompressionService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
-use TYPO3\CMS\Lang\LanguageService;
 
 /**
  * Test class for \Codemonkey1988\ImageCompression\Service\CompressionService
@@ -51,8 +50,10 @@ class CompressionServiceTest extends FunctionalTestCase
 
         $this->objectManager = GeneralUtility::makeInstance(ObjectManager::class);
 
-        $GLOBALS['LANG'] = GeneralUtility::makeInstance(LanguageService::class);
-        $GLOBALS['LANG']->init('en');
+        if (class_exists('\\TYPO3\\CMS\\Lang\\LanguageService')) {
+            $GLOBALS['LANG'] = GeneralUtility::makeInstance('TYPO3\\CMS\\Lang\\LanguageService');
+            $GLOBALS['LANG']->init('en');
+        }
     }
 
     /**
