@@ -1,29 +1,21 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Signal;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Signal;
 
 use Codemonkey1988\ImageCompression\Service\CompressionService;
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Resource\Folder;
 
-/**
- * Class ResourceStorageSignal
- *
- * @author  Tim Schreiner <schreiner.tim@gmail.com>
- */
 class ResourceStorageSignal
 {
     /**
@@ -37,7 +29,6 @@ class ResourceStorageSignal
 
     /**
      * @param CompressionService $compressionService
-     * @return void
      */
     public function injectCompressionService(CompressionService $compressionService)
     {
@@ -46,7 +37,6 @@ class ResourceStorageSignal
 
     /**
      * @param ConfigurationService $configurationService
-     * @return void
      */
     public function injectConfigurationService(ConfigurationService $configurationService)
     {
@@ -58,7 +48,6 @@ class ResourceStorageSignal
      *
      * @param File $file
      * @param Folder $folder
-     * @return void
      */
     public function postFileAdd(File $file, Folder $folder)
     {
@@ -75,7 +64,6 @@ class ResourceStorageSignal
      *
      * @param File $file
      * @param string $tmpName
-     * @return void
      */
     public function postFileReplace(File $file, string $tmpName)
     {

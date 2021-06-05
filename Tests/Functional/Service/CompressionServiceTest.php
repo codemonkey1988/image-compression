@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Tests\Functional\Service;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Tests\Functional\Service;
 
 use Codemonkey1988\ImageCompression\Compressor\TinifyCompressor;
 use Codemonkey1988\ImageCompression\Service\CompressionService;
@@ -20,9 +17,6 @@ use Nimut\TestingFramework\TestCase\FunctionalTestCase;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Test class for \Codemonkey1988\ImageCompression\Service\CompressionService
- */
 class CompressionServiceTest extends FunctionalTestCase
 {
     /**
@@ -73,7 +67,7 @@ class CompressionServiceTest extends FunctionalTestCase
 
         $files = $compressionService->getUncompressedOriginalFiles(['jpg', 'jpeg', 'png'], 99);
 
-        $this->assertEquals(4, count($files), 'There must be exactly 5 images that are not compressed');
+        self::assertEquals(4, count($files), 'There must be exactly 5 images that are not compressed');
 
         // Compress the first image.
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'] = [$this->getCompressorMock()];
@@ -81,7 +75,7 @@ class CompressionServiceTest extends FunctionalTestCase
         $compressionService->compress($files[0]);
 
         $newFiles = $compressionService->getUncompressedOriginalFiles(['jpg', 'jpeg', 'png'], 99);
-        $this->assertEquals(3, count($newFiles), 'There must be exactly 3 images that are not compressed');
+        self::assertEquals(3, count($newFiles), 'There must be exactly 3 images that are not compressed');
     }
 
     /**
@@ -102,7 +96,7 @@ class CompressionServiceTest extends FunctionalTestCase
 
         $files = $compressionService->getUncompressedProcessedFiles(['jpg', 'jpeg', 'png'], 99);
 
-        $this->assertEquals(1, count($files), 'There must be exactly 1 image that is not compressed');
+        self::assertEquals(1, count($files), 'There must be exactly 1 image that is not compressed');
 
         // Compress the first image.
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'] = [$this->getCompressorMock()];
@@ -110,7 +104,7 @@ class CompressionServiceTest extends FunctionalTestCase
         $compressionService->compress($files[0]);
 
         $newFiles = $compressionService->getUncompressedProcessedFiles(['jpg', 'jpeg', 'png'], 99);
-        $this->assertEquals(0, count($newFiles), 'There must be noimage that is not compressed');
+        self::assertEquals(0, count($newFiles), 'There must be noimage that is not compressed');
     }
 
     /**
@@ -130,7 +124,7 @@ class CompressionServiceTest extends FunctionalTestCase
 
         $files = $compressionService->getUncompressedOriginalFiles(['jpg', 'jpeg', 'png'], 99);
 
-        $this->assertEquals(4, count($files), 'There must be exactly 5 images that are not compressed');
+        self::assertEquals(4, count($files), 'There must be exactly 5 images that are not compressed');
 
         // Compress the first image.
         $GLOBALS['TYPO3_CONF_VARS']['EXTCONF']['image_compression']['compressors'] = [$this->getCompressorMock()];
@@ -140,7 +134,7 @@ class CompressionServiceTest extends FunctionalTestCase
         }
 
         $newFiles = $compressionService->getUncompressedOriginalFiles(['jpg', 'jpeg', 'png'], 99);
-        $this->assertEquals(0, count($newFiles), 'There must be no image that is not compressed');
+        self::assertEquals(0, count($newFiles), 'There must be no image that is not compressed');
     }
 
     /**
@@ -149,8 +143,8 @@ class CompressionServiceTest extends FunctionalTestCase
     protected function getCompressorMock()
     {
         $tinifyCompressorMock = $this->getAccessibleMock(TinifyCompressor::class, ['canCompress', 'compress']);
-        $tinifyCompressorMock->expects($this->any())->method('canCompress')->willReturn(true);
-        $tinifyCompressorMock->expects($this->any())->method('compress')->willReturn(true);
+        $tinifyCompressorMock->expects(self::any())->method('canCompress')->willReturn(true);
+        $tinifyCompressorMock->expects(self::any())->method('compress')->willReturn(true);
 
         return $tinifyCompressorMock;
     }

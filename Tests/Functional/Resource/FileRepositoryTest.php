@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Tests\Functional\Resource;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Tests\Functional\Resource;
 
 use Codemonkey1988\ImageCompression\Resource\FileRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -20,9 +17,6 @@ use TYPO3\CMS\Core\Resource\File;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Test class for \Codemonkey1988\ImageCompression\Resource\FileRepository
- */
 class FileRepositoryTest extends FunctionalTestCase
 {
     /**
@@ -71,9 +65,9 @@ class FileRepositoryTest extends FunctionalTestCase
 
         $files = $this->fileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 1);
 
-        $this->assertEquals(1, count($files), 'There is more or less than one image');
-        $this->assertEquals(get_class($files[0]), File::class, 'The first entry of $files is not of object type File');
-        $this->assertEquals($files[0]->getUid(), 1, 'The first image does not have the uid 1');
+        self::assertEquals(1, count($files), 'There is more or less than one image');
+        self::assertEquals(get_class($files[0]), File::class, 'The first entry of $files is not of object type File');
+        self::assertEquals($files[0]->getUid(), 1, 'The first image does not have the uid 1');
     }
 
     /**
@@ -90,7 +84,7 @@ class FileRepositoryTest extends FunctionalTestCase
 
         $files = $this->fileRepository->findUncompressedImages(['jpg'], 99);
 
-        $this->assertEquals(2, count($files), 'There are more or less than two images. Expected 2, actual ' . count($files));
+        self::assertEquals(2, count($files), 'There are more or less than two images. Expected 2, actual ' . count($files));
     }
 
     /**
@@ -102,6 +96,6 @@ class FileRepositoryTest extends FunctionalTestCase
     {
         $files = $this->fileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 1);
 
-        $this->assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
+        self::assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
     }
 }

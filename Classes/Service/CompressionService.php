@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Service;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Service;
 
 use Codemonkey1988\ImageCompression\Compressor\CompressorInterface;
 use Codemonkey1988\ImageCompression\Resource\FileRepository;
@@ -24,11 +21,6 @@ use TYPO3\CMS\Core\SingletonInterface;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Class CompressionService
- *
- * @author  Tim Schreiner <schreiner.tim@gmail.com>
- */
 class CompressionService implements SingletonInterface
 {
     /**
@@ -78,7 +70,6 @@ class CompressionService implements SingletonInterface
      * Compress an image file.
      *
      * @param AbstractFile $file
-     * @return void
      */
     public function compress(AbstractFile $file)
     {
@@ -143,7 +134,6 @@ class CompressionService implements SingletonInterface
      * Update the compression status.
      *
      * @param AbstractFile $file
-     * @return void
      */
     protected function updateCompressionStatus(AbstractFile $file)
     {
@@ -168,7 +158,6 @@ class CompressionService implements SingletonInterface
      * Update the checked status.
      *
      * @param AbstractFile $file
-     * @return void
      */
     protected function updateCheckedStatus(AbstractFile $file)
     {
@@ -192,7 +181,6 @@ class CompressionService implements SingletonInterface
      * Updates necessary database fields after successful image compression.
      *
      * @param AbstractFile $file
-     * @return void
      */
     protected function updatePostProcess(AbstractFile $file)
     {

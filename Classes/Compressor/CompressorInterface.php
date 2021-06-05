@@ -1,26 +1,17 @@
 <?php
-namespace Codemonkey1988\ImageCompression\Compressor;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Compressor;
 
 use TYPO3\CMS\Core\Resource\FileInterface;
 use TYPO3\CMS\Core\SingletonInterface;
 
-/**
- * Interface CompressorInterface
- *
- * @author  Tim Schreiner <schreiner.tim@gmail.com>
- */
 interface CompressorInterface extends SingletonInterface
 {
     /**

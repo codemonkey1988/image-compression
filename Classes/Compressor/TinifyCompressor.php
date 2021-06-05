@@ -1,27 +1,19 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Compressor;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Compressor;
 
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use TYPO3\CMS\Core\Resource\FileInterface;
 
-/**
- * Class CompressionService
- *
- * @author  Tim Schreiner <schreiner.tim@gmail.com>
- */
 class TinifyCompressor implements CompressorInterface
 {
     /**
@@ -36,16 +28,12 @@ class TinifyCompressor implements CompressorInterface
 
     /**
      * @param ConfigurationService $configurationService
-     * @return void
      */
     public function injectConfigurationService(ConfigurationService $configurationService)
     {
         $this->configurationService = $configurationService;
     }
 
-    /**
-     * @return void
-     */
     public function initializeObject()
     {
         \Tinify\setKey($this->configurationService->getTinifyApiKey());

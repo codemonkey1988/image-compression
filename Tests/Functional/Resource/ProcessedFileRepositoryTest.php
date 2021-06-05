@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Tests\Functional\Resource;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Tests\Functional\Resource;
 
 use Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -20,9 +17,6 @@ use TYPO3\CMS\Core\Resource\ProcessedFile;
 use TYPO3\CMS\Core\Utility\GeneralUtility;
 use TYPO3\CMS\Extbase\Object\ObjectManager;
 
-/**
- * Test class for \Codemonkey1988\ImageCompression\Resource\ProcessedFileRepository
- */
 class ProcessedFileRepositoryTest extends FunctionalTestCase
 {
     /**
@@ -72,9 +66,9 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
 
         $files = $this->processedFileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 1);
 
-        $this->assertTrue(is_array($files) && count($files) === 1, 'There is more or less than one image');
-        $this->assertEquals(get_class($files[0]), ProcessedFile::class, 'The first entry of $files is not of object type ProcessedFile');
-        $this->assertEquals($files[0]->getUid(), 10, 'The first image does not have the uid 1');
+        self::assertTrue(is_array($files) && count($files) === 1, 'There is more or less than one image');
+        self::assertEquals(get_class($files[0]), ProcessedFile::class, 'The first entry of $files is not of object type ProcessedFile');
+        self::assertEquals($files[0]->getUid(), 10, 'The first image does not have the uid 1');
     }
 
     /**
@@ -92,7 +86,7 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
 
         $files = $this->processedFileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 99);
 
-        $this->assertEquals(1, count($files));
+        self::assertEquals(1, count($files));
     }
 
     /**
@@ -104,6 +98,6 @@ class ProcessedFileRepositoryTest extends FunctionalTestCase
     {
         $files = $this->processedFileRepository->findUncompressedImages(['jpg', 'jpeg', 'png'], 1);
 
-        $this->assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
+        self::assertTrue(is_array($files) && count($files) === 0, 'One or more images are found');
     }
 }

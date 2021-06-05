@@ -1,18 +1,15 @@
 <?php
+
 declare(strict_types=1);
-namespace Codemonkey1988\ImageCompression\Tests\Unit\Compressor;
 
 /*
- * This file is part of the TYPO3 responsive images project.
+ * This file is part of the "image_compression" Extension for TYPO3 CMS.
  *
- * It is free software; you can redistribute it and/or modify it under
- * the terms of the GNU General Public License, either version 2
- * of the License, or any later version.
- *
- * For the full copyright and license information, please read
+ * For the full copyright and license information, please read the
  * LICENSE file that was distributed with this source code.
- *
  */
+
+namespace Codemonkey1988\ImageCompression\Tests\Unit\Compressor;
 
 use Codemonkey1988\ImageCompression\Service\ConfigurationService;
 use Nimut\TestingFramework\TestCase\FunctionalTestCase;
@@ -50,11 +47,11 @@ class ConfigurationServiceTest extends FunctionalTestCase
     {
         $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
 
-        $this->assertFalse($configurationService->isCompressOnUploadEnabled());
+        self::assertFalse($configurationService->isCompressOnUploadEnabled());
 
         // Default Tinify config
-        $this->assertEmpty($configurationService->getTinifyApiKey());
-        $this->assertEquals(500, $configurationService->getTinifyMaxMonthlyCompressionCount());
+        self::assertEmpty($configurationService->getTinifyApiKey());
+        self::assertEquals(500, $configurationService->getTinifyMaxMonthlyCompressionCount());
     }
 
     /**
@@ -73,11 +70,11 @@ class ConfigurationServiceTest extends FunctionalTestCase
 
         $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
 
-        $this->assertTrue($configurationService->isCompressOnUploadEnabled());
+        self::assertTrue($configurationService->isCompressOnUploadEnabled());
 
         // Default Tinify config
-        $this->assertEquals('MyApiKey', $configurationService->getTinifyApiKey());
-        $this->assertEquals(600, $configurationService->getTinifyMaxMonthlyCompressionCount());
+        self::assertEquals('MyApiKey', $configurationService->getTinifyApiKey());
+        self::assertEquals(600, $configurationService->getTinifyMaxMonthlyCompressionCount());
     }
 
     /**
@@ -96,10 +93,10 @@ class ConfigurationServiceTest extends FunctionalTestCase
 
         $configurationService = GeneralUtility::makeInstance(ConfigurationService::class);
 
-        $this->assertTrue($configurationService->isCompressOnUploadEnabled());
+        self::assertTrue($configurationService->isCompressOnUploadEnabled());
 
         // Default Tinify config
-        $this->assertEquals('MyApiKey', $configurationService->getTinifyApiKey());
-        $this->assertEquals(600, $configurationService->getTinifyMaxMonthlyCompressionCount());
+        self::assertEquals('MyApiKey', $configurationService->getTinifyApiKey());
+        self::assertEquals(600, $configurationService->getTinifyMaxMonthlyCompressionCount());
     }
 }
